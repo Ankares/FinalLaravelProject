@@ -9,6 +9,7 @@ class Shop extends Model
 {
     use HasFactory;
     public $timestamps = false;
+    protected $guarded = ['id'];
 
     private $chosenData = [
         'itemId' => '',

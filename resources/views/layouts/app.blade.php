@@ -15,9 +15,8 @@
                 font-family: 'Nunito', sans-serif;
             }
         </style>
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="bg-gray-100">
+    <body class="bg-light">
         @yield('content')
       </body>
     </body>

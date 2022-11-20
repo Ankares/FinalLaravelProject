@@ -18,18 +18,18 @@ class ShopFactory extends Factory
     {
         $itemToDB = [];
         $items = [
-            ['Телевизор Horizont 32LE7051D', 'Horizont', 'Телевизор Horizont 32LE7051D.jpeg'],
-            ['Телевизор LG 32LM576BPLD', 'LG', 'Телевизор LG 32LM576BPLD.jpeg'],
-            ['Телевизор Philips 43PFS5505(60)', 'Philips', 'Телевизор Philips 43PFS5505.jpeg'],
-            ['Ноутбук HP 250 G8 (2X7T8EA)', 'HP', 'Ноутбук HP 250 G8 (2X7T8EA).jpg'],
-            ['Ноутбук Lenovo IdeaPad L3 15ITL6', 'Lenovo', 'Ноутбук Lenovo IdeaPad L3 15ITL6.jpg'],
-            ['Ноутбук Acer Aspire 3 A315-34-P7TD', 'Acer', 'Ноутбук Acer Aspire 3 A315-34-P7TD.jpg'],
-            ['Смартфон Apple iPhone 13 128GB', 'Apple', 'Смартфон Apple iPhone 13 128GB.jpg'],
-            ['Смартфон Xiaomi Redmi Note 11 4GB(64GB)', 'Xiaomi', 'Смартфон Xiaomi Redmi Note 11 4GB.jpg'],
-            ['Смартфон Samsung Galaxy A23 128GB', 'Samsung', 'Смартфон Samsung Galaxy A23 128GB.jpg'],
-            ['Холодильник с морозильником ATLANT ХМ 4208-000', 'ATLANT', 'Холодильник с морозильником ATLANT ХМ 4208-000.jpg'],
-            ['Холодильник с морозильником LG DoorCooling GA-B509MMQM', 'LG', 'Холодильник с морозильником LG DoorCooling GA-B509MMQM.jpg'],
-            ['Холодильник с морозильником Beko CNMV5335E20VS', 'Beko', 'Холодильник с морозильником Beko CNMV5335E20VS.jpg'],
+            ['Телевизор Horizont 32LE7051D', 'Horizont', 'te/hz/Телевизор Horizont 32LE7051D.jpeg'],
+            ['Телевизор LG 32LM576BPLD', 'LG', 'te/lg/Телевизор LG 32LM576BPLD.jpeg'],
+            ['Телевизор Philips 43PFS5505(60)', 'Philips', 'te/ph/Телевизор Philips 43PFS5505.jpeg'],
+            ['Ноутбук HP 250 G8 (2X7T8EA)', 'HP', 'no/hp/Ноутбук HP 250 G8 (2X7T8EA).jpg'],
+            ['Ноутбук Lenovo IdeaPad L3 15ITL6', 'Lenovo', 'no/le/Ноутбук Lenovo IdeaPad L3 15ITL6.jpg'],
+            ['Ноутбук Acer Aspire 3 A315-34-P7TD', 'Acer', 'no/ac/Ноутбук Acer Aspire 3 A315-34-P7TD.jpg'],
+            ['Смартфон Apple iPhone 13 128GB', 'Apple', 'sm/ap/Смартфон Apple iPhone 13 128GB.jpg'],
+            ['Смартфон Xiaomi Redmi Note 11 4GB(64GB)', 'Xiaomi', 'sm/xi/Смартфон Xiaomi Redmi Note 11 4GB.jpg'],
+            ['Смартфон Samsung Galaxy A23 128GB', 'Samsung', 'sm/sa/Смартфон Samsung Galaxy A23 128GB.jpg'],
+            ['Холодильник с морозильником ATLANT ХМ 4208-000', 'ATLANT', 'xo/at/Холодильник с морозильником ATLANT ХМ 4208-000.jpg'],
+            ['Холодильник с морозильником LG DoorCooling GA-B509MMQM', 'LG', 'xo/lg/Холодильник с морозильником LG DoorCooling GA-B509MMQM.jpg'],
+            ['Холодильник с морозильником Beko CNMV5335E20VS', 'Beko', 'xo/be/Холодильник с морозильником Beko CNMV5335E20VS.jpg'],
         ];
         $some = fake()->randomElement($items);
         $itemToDB = [

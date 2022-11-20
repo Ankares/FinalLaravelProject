@@ -1,0 +1,43 @@
+<?php
+
+namespace App\Services;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
+class FileProcessingService
+{
+    
+    public function imageStoring(Request $request)
+    {
+        if ($request->hasFile('itemImage') && $request->file('itemImage')->isValid()) {
+            $file = $request->file('itemImage');
+            $newImageName = $file->hashName();
+            $firstSaveDir = strtolower(substr($newImageName, 0, 2));
+            $secondSaveDir = strtolower(substr($newImageName, 2, 2));
+            $fileSaveDir = $firstSaveDir.'/'.$secondSaveDir;
+            $file->storeAs('shopItems/'.$fileSaveDir, $newImageName);
+            return $fileSaveDir.'/'.$newImageName;
+        } else {
+            return 'noimage.jpg';
+        }
+    }
+
+    public function deleteFromDir($filePath)
+    {
+        if ($filePath != '') {
+            Storage::delete('shopItems/'.$filePath);
+        }
+    }
+
+    public function deleteEmptyDir($filePath)
+    {
+        $path = explode('/', $filePath);
+        $firstDir = $path[0];
+        $secondDir = $path[1];
+        if (isset($firstDir) && isset($secondDir)) {
+            @rmdir('shopItems/'.$firstDir.'/'.$secondDir);
+            @rmdir('shopItems/'.$firstDir);
+        }
+    }
+}
