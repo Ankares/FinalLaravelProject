@@ -10,7 +10,14 @@
             @foreach ($collections as $item)
                 <div class="card col-lg-3 offset-lg-1 col-md-5 offset-md-1 col-10 offset-1 mb-5 p-2 position-relative">
                     <div class="d-flex justify-content-between">
-                        <a href="{{route('edit', [$item['id']])}}" class="btn btn-outline-primary px-4">Edit</a>
+                        <form action={{route('edit', [$item['id']])}} method="get">
+                            @csrf
+                            <button class="btn btn-outline-primary px-4">Edit</button>
+                        </form>
+                        <form action={{route('delete', [$item['id']])}} method="post">
+                            @csrf
+                            <button class="btn btn-outline-danger px-4">Delete</button>
+                        </form>
                     </div>
                     <img src="shopItems/{!! $item['itemImage'] !!}" class="card-img-top p-2" alt="shopItems/{!! $item['itemImage'] !!}">
                     <div class="card-body text-start lead">

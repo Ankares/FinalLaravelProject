@@ -4,7 +4,6 @@
 @endsection
 @extends('layouts/header')
 @section('content')
-    @foreach ($collection as $item)
         <div class="container">
             <p class="mt-5 mb-4 text-center display-6">Services for: {!! $item['itemName'] !!}</p>
             <div class="list-group-item bg-white border shadow-sm offset-md-1 offset-0 col-md-10 col-12 mb-4 mt-3 fs-5 px-4 py-2">
@@ -28,19 +27,20 @@
                         </div>
                         <hr> 
                     @endif
-                    <p class="fs-3 mt-3">Set up</p>
-                    <div class="mx-4 my-3">
-                        <p class="mb-2">Set up Cost: {!! $item['itemSetupCost'] !!} BYN</p> 
-                        <input type="checkbox" name="setUp" class="form-check-input"> Include set up</input>
-                    </div>
-                    <hr>
+                    @if (isset($item['itemSetupCost']))
+                        <p class="fs-3 mt-3">Set up</p>
+                        <div class="mx-4 my-3">
+                            <p class="mb-2">Set up Cost: {!! $item['itemSetupCost'] !!} BYN</p> 
+                            <input type="checkbox" name="setUp" class="form-check-input"> Include set up</input>
+                        </div>
+                        <hr>
+                    @endif
                     
                     <input type="hidden" name="itemId" value="{!! $item['id'] !!}"></input>
                     <button type="submit" class="btn btn-outline-primary mt-5 p-2 col-md-4 col-8">Add to cart</button>
                 </form>
             </div>
-        </div>
-    @endforeach   
+        </div>  
 @endsection
     
    

@@ -17,13 +17,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [ShopController::class, 'show'])->name('home');
 
-Route::middleware('auth', 'verified')->group(function() {
+Route::middleware('auth', 'verified')->group(function () {
     Route::get('/product-services/{id}', [ShopController::class, 'additionalServices'])->name('services');
     Route::any('/shopping-cart', [ShopController::class, 'cart'])->name('cart');
+    Route::post('/shopping-cart/delete/{id}', [ShopController::class, 'deleteFromCart'])->name('deleteFromCart');
     Route::get('/add-product', [ShopController::class, 'create'])->name('create');
     Route::post('/add-product', [ShopController::class, 'store'])->name('store');
     Route::get('/edit-product/{id}', [ShopController::class, 'edit'])->name('edit');
     Route::post('/edit-product/{id}', [ShopController::class, 'update'])->name('update');
+    Route::post('/delete-product/{id}', [ShopController::class, 'delete'])->name('delete');
 });
 
 

@@ -9,7 +9,14 @@
             <p class="mt-5 mb-4 text-center fs-1">Shopping cart</p>
             <div class="list-group-item bg-white border shadow-sm col-10 offset-1 mb-4 mt-3 fs-5 p-4">
                 @foreach ($products as $product)
-                    <p class="lead fs-4 mt-3 mb-2 fw-bold">{!! $product['itemName'] !!}</p>
+                    <div class="d-flex align-items-center">
+                        <p class="lead fs-4 mt-3 mb-2 fw-bold col-lg-11 col-10">{!! $product['itemName'] !!}</p>
+                        <form action={{ route('deleteFromCart', ['id' => $product['id']]) }} method="post">
+                            @csrf
+                            <input type="hidden" value={!! $product['id'] !!}>
+                            <button class="btn btn-danger fs-4 px-4 ">&times;</button>
+                        </form>
+                    </div>
                     <div class="mx-4 mb-4">
                         <img src="shopItems/{!! $product['itemImage'] !!}" class="img-fluid w-25 mb-2 mt-1" alt="{!! $product['itemImage'] !!}">
 

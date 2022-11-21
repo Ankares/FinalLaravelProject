@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Storage;
 
 class FileProcessingService
 {
-    
     public function imageStoring(Request $request)
     {
         if ($request->hasFile('itemImage') && $request->file('itemImage')->isValid()) {
@@ -17,6 +16,7 @@ class FileProcessingService
             $secondSaveDir = strtolower(substr($newImageName, 2, 2));
             $fileSaveDir = $firstSaveDir.'/'.$secondSaveDir;
             $file->storeAs('shopItems/'.$fileSaveDir, $newImageName);
+
             return $fileSaveDir.'/'.$newImageName;
         } else {
             return 'noimage.jpg';

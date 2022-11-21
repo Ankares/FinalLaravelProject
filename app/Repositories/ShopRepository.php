@@ -10,7 +10,7 @@ class ShopRepository implements ShopDataInterface
 {
     public function getAllProducts($limit = 30)
     {
-        $shopItems = Shop::query()->where('id', '>', 20)->limit($limit)->get();
+        $shopItems = Shop::query()->where('id', '>=', 1)->limit($limit)->get();
 
         return $shopItems;
     }
@@ -52,5 +52,10 @@ class ShopRepository implements ShopDataInterface
             'deliveryCost' => $request->deliveryCost,
             'itemSetupCost' => $request->setUpCost,
         ]);
+    }
+
+    public function deleteOneProduct($id)
+    {
+        Shop::query()->where('id', $id)->delete();
     }
 }

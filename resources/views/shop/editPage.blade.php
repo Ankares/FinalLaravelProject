@@ -41,6 +41,7 @@
             <div class="form-group fs-4">
                 <label class="mb-2">Product image</label> <br>
                 <img src="../shopItems/{!! $item['itemImage'] !!}" class="card-img-top w-25 p-2 mb-2" alt="shopItems/{!! $item['itemImage'] !!}">
+                <br><input type="checkbox" name="dropImage" class="form-check-input mb-3"> No image</input>
                 <input type="file" name="itemImage" class="form-control mb-2 fs-6" placeholder="upload image">  
                 @error('itemImage')  
                     <div class="alert alert-danger mb-2 fs-5"> {{ $message }} </div>

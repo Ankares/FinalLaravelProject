@@ -24,24 +24,35 @@ class ShopController extends Controller
     public function store(Request $request)
     {
         $this->itemService->storeProduct($request);
+
         return redirect('/');
     }
 
     public function show()
     {
         $collections = $this->repository->getAllProducts();
+
         return view('shop/shopPage', ['collections' => $collections]);
     }
 
-    public function edit($id)
+    public function edit(Request $request)
     {
-        $collection = $this->repository->getOneProductById($id);
+        $collection = $this->repository->getOneProductById($request->id);
+
         return view('shop/editPage', ['item' => $collection[0]]);
     }
 
     public function update(Request $request)
     {
         $this->itemService->updateProduct($request);
+
+        return redirect('/');
+    }
+
+    public function delete(Request $request)
+    {
+        $this->itemService->deleteProduct($request);
+
         return redirect('/');
     }
 
@@ -49,7 +60,7 @@ class ShopController extends Controller
     {
         $collection = $this->repository->getOneProductById($request->id);
 
-        return view('shop/productServices', ['collection' => $collection]);
+        return view('shop/productServices', ['item' => $collection[0]]);
     }
 
     public function cart(Request $request)
@@ -60,5 +71,12 @@ class ShopController extends Controller
         $products = $this->sessionService->getProductsFromSession();
 
         return view('shop/cart', ['products' => $products]);
+    }
+
+    public function deleteFromCart(Request $request)
+    {
+        $this->sessionService->deleteFromSession($request->id);
+
+        return redirect('/shopping-cart');
     }
 }

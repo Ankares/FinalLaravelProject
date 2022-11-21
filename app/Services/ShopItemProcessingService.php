@@ -4,15 +4,14 @@ namespace App\Services;
 
 use App\Repositories\ShopRepository;
 use Illuminate\Http\Request;
-use App\Services\FileProcessingService;
 
 class ShopItemProcessingService
 {
     public function __construct(
         private FileProcessingService $fileService,
         private ShopRepository $repository
-    )
-    {}
+    ) {
+    }
 
     private function validation(Request $request)
     {
@@ -39,10 +38,10 @@ class ShopItemProcessingService
 
     public function storeProduct(Request $request)
     {
-       $this->validation($request);
+        $this->validation($request);
 
         $path = $this->fileService->imageStoring($request);
-        
+
         $this->repository->addOneProduct($request, $path);
     }
 
@@ -51,18 +50,35 @@ class ShopItemProcessingService
         $this->validation($request);
         $productFromDB = $this->repository->getOneProductById($request->id);
 
-        if($request->hasFile('itemImage') && $productFromDB[0]['itemImage'] != 'noimage.jpg') {
+        if ($request->hasFile('itemImage') && $productFromDB[0]['itemImage'] != 'noimage.jpg') {
             $this->fileService->deleteFromDir($productFromDB[0]['itemImage']);
             $this->fileService->deleteEmptyDir($productFromDB[0]['itemImage']);
             $path = $this->fileService->imageStoring($request);
-        } 
-        if($request->hasFile('itemImage') && $productFromDB[0]['itemImage'] == 'noimage.jpg') {
+        }
+        if ($request->hasFile('itemImage') && $productFromDB[0]['itemImage'] == 'noimage.jpg') {
             $path = $this->fileService->imageStoring($request);
         }
-        if(!$request->hasFile('itemImage')) {
+        if (!$request->hasFile('itemImage')) {
             $path = $productFromDB[0]['itemImage'];
         }
-        
+        if (isset($request->dropImage) && !$request->hasFile('itemImage') && $productFromDB[0]['itemImage'] != 'noimage.jpg') {
+            $this->fileService->deleteFromDir($productFromDB[0]['itemImage']);
+            $this->fileService->deleteEmptyDir($productFromDB[0]['itemImage']);
+            $path = 'noimage.jpg';
+        }
+
         $this->repository->updateOneProduct($request, $path);
+    }
+
+    public function deleteProduct(Request $request)
+    {
+        $productFromDB = $this->repository->getOneProductById($request->id);
+
+        if ($productFromDB[0]['itemImage'] != 'noimage.jpg') {
+            $this->fileService->deleteFromDir($productFromDB[0]['itemImage']);
+            $this->fileService->deleteEmptyDir($productFromDB[0]['itemImage']);
+        }
+
+        $this->repository->deleteOneProduct($request->id);
     }
 }

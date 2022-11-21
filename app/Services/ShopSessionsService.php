@@ -82,8 +82,20 @@ class ShopSessionsService
             $totalPrice += $productFromDB['itemSetupCost'];
             $productWithChosenServices = [...$productWithChosenServices, 'setupCost' => $productFromDB['itemSetupCost']];
         }
-        $productWithChosenServices = ['itemName' => $productFromDB['itemName'], 'itemImage' => $productFromDB['itemImage'], 'year' => $productFromDB['created_year'], 'totalPrice' => $totalPrice, ...$productWithChosenServices, ];
+        $productWithChosenServices = ['id' => $productFromDB['id'], 'itemName' => $productFromDB['itemName'], 'itemImage' => $productFromDB['itemImage'], 'year' => $productFromDB['created_year'], 'totalPrice' => $totalPrice, ...$productWithChosenServices, ];
 
         return $productWithChosenServices;
+    }
+
+    public function deleteFromSession($id)
+    {
+        $session = session('products');
+        session()->forget('products');
+
+        foreach ($session as $sessionProduct) {
+            if ($sessionProduct['itemId'] != $id) {
+                session()->push('products', $sessionProduct);
+            }
+        }
     }
 }
