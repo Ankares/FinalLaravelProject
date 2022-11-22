@@ -18,20 +18,23 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [ShopController::class, 'show'])->name('home');
 
 Route::middleware('auth', 'verified')->group(function () {
-    Route::get('/product-services/{id}', [ShopController::class, 'additionalServices'])->name('services');
-    Route::any('/shopping-cart', [ShopController::class, 'cart'])->name('cart');
-    Route::post('/shopping-cart/delete/{id}', [ShopController::class, 'deleteFromCart'])->name('deleteFromCart');
-    Route::get('/add-product', [ShopController::class, 'create'])->name('create');
-    Route::post('/add-product', [ShopController::class, 'store'])->name('store');
-    Route::get('/edit-product/{id}', [ShopController::class, 'edit'])->name('edit');
-    Route::post('/edit-product/{id}', [ShopController::class, 'update'])->name('update');
-    Route::post('/delete-product/{id}', [ShopController::class, 'delete'])->name('delete');
+    Route::middleware('role:simple-user')->group(function() {
+        Route::get('/product-services/{id}', [ShopController::class, 'additionalServices'])->name('services');
+        Route::any('/shopping-cart', [ShopController::class, 'cart'])->name('cart');
+        Route::post('/shopping-cart/delete/{id}', [ShopController::class, 'deleteFromCart'])->name('deleteFromCart');
+    });
+    Route::middleware('role:administrative-user')->group(function() {
+        Route::get('/add-product', [ShopController::class, 'create'])->name('create');
+        Route::post('/add-product', [ShopController::class, 'store'])->name('store');
+        Route::get('/edit-product/{id}', [ShopController::class, 'edit'])->name('edit');
+        Route::post('/edit-product/{id}', [ShopController::class, 'update'])->name('update');
+        Route::post('/delete-product/{id}', [ShopController::class, 'delete'])->name('delete');
+    });
+
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
 });
-
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 // Route::middleware('auth')->group(function () {
 //     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

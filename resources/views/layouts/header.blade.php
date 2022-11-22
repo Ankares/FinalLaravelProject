@@ -13,12 +13,16 @@
             <a href="{{route('home')}}" class="nav-link px-2 text-white">Shop</a>
           </li>
           @auth
-            <li class="lead">
-              <a href="{{route('cart')}}"" class="nav-link px-2 text-white">Cart</a>
-            </li>
-            <li class="lead">
-              <a href="{{route('create')}}" class="nav-link px-2 text-white">Add product</a>
-            </li>
+            @role('simple-user')
+              <li class="lead">
+                <a href="{{route('cart')}}"" class="nav-link px-2 text-white">Cart</a>
+              </li>
+            @endrole
+            @role('administrative-user')
+              <li class="lead">
+                <a href="{{route('create')}}" class="nav-link px-2 text-white">Add product</a>
+              </li>
+            @endrole
           @endauth
         </ul>
         <div class="text-end">
