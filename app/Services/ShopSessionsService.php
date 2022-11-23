@@ -14,10 +14,10 @@ class ShopSessionsService
     }
 
     /**
-     * Adding chosen product and its services to Session
-     * 
+     * Adding chosen product and its services to Session.
+     *
      * @param array $chosenProductAndServices
-     * 
+     *
      * @return void
      */
     public function addProductToSession($chosenProductAndServices)
@@ -47,8 +47,8 @@ class ShopSessionsService
     }
 
     /**
-     * Get chosen product and its services from Session
-     * 
+     * Get chosen product and its services from Session.
+     *
      * @return void|array
      */
     public function getProductsFromSession()
@@ -73,11 +73,11 @@ class ShopSessionsService
     }
 
     /**
-     * Creating an array of products with only chosen services 
-     * 
+     * Creating an array of products with only chosen services.
+     *
      * @param array $productFromDB
      * @param array $sessionProduct
-     * 
+     *
      * @return void|array
      */
     private function createArrayWithSelectedServices($productFromDB, $sessionProduct)
@@ -107,10 +107,10 @@ class ShopSessionsService
     }
 
     /**
-     * Delete product from Session
-     * 
+     * Delete product from Session.
+     *
      * @param int $id
-     * 
+     *
      * @return void
      */
     public function deleteFromSession($id)

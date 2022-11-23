@@ -11,7 +11,7 @@ class Shop extends Model
     public $timestamps = false;
     protected $guarded = ['id'];
 
-     /**
+    /**
      * Chosen services for product.
      *
      * @var array<string, string|int>
@@ -24,10 +24,10 @@ class Shop extends Model
     ];
 
     /**
-     * Set product and chosen services
-     * 
+     * Set product and chosen services.
+     *
      * @param array $chosenItemAndServices
-     * 
+     *
      * @return void
      */
     public function setData($chosenItemAndServices)
@@ -40,8 +40,8 @@ class Shop extends Model
     }
 
     /**
-     * Get chosen product with services
-     * 
+     * Get chosen product with services.
+     *
      * @return array
      */
     public function getData()

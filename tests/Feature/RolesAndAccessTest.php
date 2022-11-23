@@ -14,9 +14,9 @@ class RolesAndAccessTest extends TestCase
 {
     // use RefreshDatabase;
     /**
-     * @dataProvider adminRedirections 
+     * @dataProvider adminRedirections
      */
-    public function test_admin_redirect_expections($status, $redirectTo) : void
+    public function test_admin_redirect_expections($status, $redirectTo): void
     {
         Shop::factory(1)->create();
         $admin = new Role();
@@ -24,7 +24,6 @@ class RolesAndAccessTest extends TestCase
         $admin->slug = 'administrative-user';
         $admin->save();
         $adminRole = Role::where('slug', 'administrative-user')->first();
-        $user = new User();
         $user = User::factory()->createOne();
         $user->roles()->attach($adminRole);
 
@@ -33,17 +32,15 @@ class RolesAndAccessTest extends TestCase
     }
 
     /**
-     * @dataProvider userRedirections 
+     * @dataProvider userRedirections
      */
-    public function test_user_redirect_expections($status, $redirectTo) : void
+    public function test_user_redirect_expections($status, $redirectTo): void
     {
-        Shop::factory(1)->create();
         $admin = new Role();
         $admin->name = 'Simple user';
         $admin->slug = 'simple-user';
         $admin->save();
         $adminRole = Role::where('slug', 'simple-user')->first();
-        $user = new User();
         $user = User::factory()->createOne();
         $user->roles()->attach($adminRole);
 
@@ -51,7 +48,7 @@ class RolesAndAccessTest extends TestCase
         $response->assertStatus($status);
     }
 
-    public function adminRedirections() : array
+    public function adminRedirections(): array
     {
         return $redirection = [
             [200, '/'],
@@ -64,7 +61,7 @@ class RolesAndAccessTest extends TestCase
         ];
     }
 
-    public function userRedirections() : array
+    public function userRedirections(): array
     {
         return $redirection = [
             [200, '/'],

@@ -13,10 +13,8 @@ use function PHPUnit\Framework\assertNotEmpty;
 
 class ProductSessionTest extends TestCase
 {
-    
     public function test_session_service_methods()
     {
-        
         $repositoryMock = $this->mock(ShopRepository::class);
         $repositoryMock->expects()->getOneProductById(1)->andReturn([[
             'id' => '1',
@@ -43,15 +41,15 @@ class ProductSessionTest extends TestCase
         $returnArray = $productService->getProductsFromSession();
         $expectedArray = [
             ['id' => '1',
-            'itemName' => 'TestItem',
-            'itemImage' => 'noimage.jpg',
-            'year' => '2020',
-            'totalPrice' => '3000',
-            'warrantyPeriod' => '10 days',
-            'warrantyCost' => '1000']
+                'itemName' => 'TestItem',
+                'itemImage' => 'noimage.jpg',
+                'year' => '2020',
+                'totalPrice' => '3000',
+                'warrantyPeriod' => '10 days',
+                'warrantyCost' => '1000', ],
         ];
         assertEquals($expectedArray, $returnArray);
-        
+
         $productService->deleteFromSession(1);
         assertEmpty(session('products'));
     }

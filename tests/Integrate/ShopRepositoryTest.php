@@ -3,7 +3,6 @@
 namespace Tests\Integrate;
 
 use App\Models\Shop;
-use App\Repositories\ShopRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -11,7 +10,7 @@ use Tests\TestCase;
 class ShopRepositoryTest extends TestCase
 {
     // use RefreshDatabase;
-    
+
     /**
      * A basic feature test example.
      *

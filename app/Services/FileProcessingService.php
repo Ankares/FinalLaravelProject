@@ -7,12 +7,11 @@ use Illuminate\Support\Facades\Storage;
 
 class FileProcessingService
 {
-
     /**
-     * Proccessing image (save to dir + return image path for DB)
-     * 
+     * Proccessing image (save to dir + return image path for DB).
+     *
      * @param \Illuminate\Http\Request $request
-     * 
+     *
      * @return string
      */
     public function imageStoring(Request $request)
@@ -32,10 +31,10 @@ class FileProcessingService
     }
 
     /**
-     * Deleting image from directory
-     * 
+     * Deleting image from directory.
+     *
      * @param string $filePath
-     * 
+     *
      * @return void
      */
     public function deleteFromDir($filePath)
@@ -46,10 +45,10 @@ class FileProcessingService
     }
 
     /**
-     * Deleting empty directory
-     * 
+     * Deleting empty directory.
+     *
      * @param string $filePath
-     * 
+     *
      * @return void
      */
     public function deleteEmptyDir($filePath)

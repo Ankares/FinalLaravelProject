@@ -9,11 +9,11 @@ use Illuminate\Http\Request;
 class ShopRepository implements ShopDataInterface
 {
     /**
-     * Get limited products from DB
-     * 
+     * Get limited products from DB.
+     *
      * @param int $from
      * @param int $limit
-     * 
+     *
      * @return array
      */
     public function getAllProducts($from, $limit)
@@ -24,10 +24,10 @@ class ShopRepository implements ShopDataInterface
     }
 
     /**
-     * Get one product from DB
-     * 
+     * Get one product from DB.
+     *
      * @param int $id
-     * 
+     *
      * @return array
      */
     public function getOneProductById($id)
@@ -38,11 +38,11 @@ class ShopRepository implements ShopDataInterface
     }
 
     /**
-     * Add product to DB 
-     * 
+     * Add product to DB.
+     *
      * @param \Illuminate\Http\Request $request
-     * @param string $pathToDB
-     * 
+     * @param string                   $pathToDB
+     *
      * @return void
      */
     public function addOneProduct(Request $request, $pathToDB)
@@ -62,11 +62,11 @@ class ShopRepository implements ShopDataInterface
     }
 
     /**
-     * Update product in DB 
-     * 
+     * Update product in DB.
+     *
      * @param \Illuminate\Http\Request $request
-     * @param string $pathToDB
-     * 
+     * @param string                   $pathToDB
+     *
      * @return void
      */
     public function updateOneProduct(Request $request, $pathToDB)
@@ -86,10 +86,10 @@ class ShopRepository implements ShopDataInterface
     }
 
     /**
-     * Delete one product from DB
-     * 
+     * Delete one product from DB.
+     *
      * @param int $id
-     * 
+     *
      * @return void
      */
     public function deleteOneProduct($id)

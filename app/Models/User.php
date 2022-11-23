@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use App\Models\Role;
 
 class User extends Authenticatable
 {
@@ -44,8 +43,8 @@ class User extends Authenticatable
     ];
 
     /**
-     * Making users belongs to many roles
-     * 
+     * Making users belongs to many roles.
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function roles()
@@ -54,18 +53,20 @@ class User extends Authenticatable
     }
 
     /**
-     * Checking if user has specified roles
-     * 
+     * Checking if user has specified roles.
+     *
      * @param mixed $roles
-     * 
+     *
      * @return bool
      */
-    public function hasRole(... $roles) {
+    public function hasRole(...$roles)
+    {
         foreach ($roles as $role) {
             if ($this->roles->contains('slug', $role)) {
                 return true;
             }
         }
+
         return false;
     }
 }

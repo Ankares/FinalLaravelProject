@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Database\Seeders;
 
@@ -7,10 +7,9 @@ use Illuminate\Database\Seeder;
 
 class RoleSeeder extends Seeder
 {
-
     /**
-     *  Seed the roles
-     * 
+     *  Seed the roles.
+     *
      *  @return void
      */
     public function run()

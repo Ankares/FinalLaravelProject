@@ -9,7 +9,7 @@ use Illuminate\Database\Seeder;
 class UserSeeder extends Seeder
 {
     /**
-     * Seed the users
+     * Seed the users.
      *
      * @return void
      */
@@ -31,7 +31,5 @@ class UserSeeder extends Seeder
         $admin->password = password_hash('password', PASSWORD_DEFAULT);
         $admin->save();
         $admin->roles()->attach($adminRole);
-        
     }
-   
 }
