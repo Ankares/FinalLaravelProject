@@ -8,7 +8,7 @@
         <h2 class="mb-5 fs-1 text-center">Shop assortment</h2>
         <div class="row">
             @foreach ($collections as $item)
-                <div class="card col-lg-3 offset-lg-1 col-md-5 offset-md-1 col-10 offset-1 mb-5 p-2 position-relative">
+                <div class="product card col-lg-3 offset-lg-1 col-md-5 offset-md-1 col-10 offset-1 mb-5 p-2 position-relative">
                     @role('administrative-user')
                         <div class="d-flex justify-content-between">
                             <form action={{route('edit', [$item['id']])}} method="get">

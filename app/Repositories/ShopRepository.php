@@ -8,13 +8,28 @@ use Illuminate\Http\Request;
 
 class ShopRepository implements ShopDataInterface
 {
-    public function getAllProducts($limit = 30)
+    /**
+     * Get limited products from DB
+     * 
+     * @param int $from
+     * @param int $limit
+     * 
+     * @return array
+     */
+    public function getAllProducts($from, $limit)
     {
-        $shopItems = Shop::query()->where('id', '>=', 1)->limit($limit)->get();
+        $shopItems = Shop::query()->where('id', '>=', $from)->limit($limit)->get();
 
         return $shopItems;
     }
 
+    /**
+     * Get one product from DB
+     * 
+     * @param int $id
+     * 
+     * @return array
+     */
     public function getOneProductById($id)
     {
         $shopItem = Shop::query()->where('id', $id)->get();
@@ -22,6 +37,14 @@ class ShopRepository implements ShopDataInterface
         return $shopItem;
     }
 
+    /**
+     * Add product to DB 
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @param string $pathToDB
+     * 
+     * @return void
+     */
     public function addOneProduct(Request $request, $pathToDB)
     {
         Shop::query()->create([
@@ -38,6 +61,14 @@ class ShopRepository implements ShopDataInterface
         ])->save();
     }
 
+    /**
+     * Update product in DB 
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @param string $pathToDB
+     * 
+     * @return void
+     */
     public function updateOneProduct(Request $request, $pathToDB)
     {
         Shop::where('id', $request->id)->update([
@@ -54,6 +85,13 @@ class ShopRepository implements ShopDataInterface
         ]);
     }
 
+    /**
+     * Delete one product from DB
+     * 
+     * @param int $id
+     * 
+     * @return void
+     */
     public function deleteOneProduct($id)
     {
         Shop::query()->where('id', $id)->delete();

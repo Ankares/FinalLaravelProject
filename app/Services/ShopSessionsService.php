@@ -13,7 +13,14 @@ class ShopSessionsService
     ) {
     }
 
-    public function addProductToSession(array $chosenProductAndServices): void
+    /**
+     * Adding chosen product and its services to Session
+     * 
+     * @param array $chosenProductAndServices
+     * 
+     * @return void
+     */
+    public function addProductToSession($chosenProductAndServices)
     {
         $productExists = false;
 
@@ -39,7 +46,11 @@ class ShopSessionsService
         }
     }
 
-
+    /**
+     * Get chosen product and its services from Session
+     * 
+     * @return void|array
+     */
     public function getProductsFromSession()
     {
         $productsWithChosenServices = [];
@@ -61,7 +72,15 @@ class ShopSessionsService
         return $productsWithChosenServices;
     }
 
-    private function createArrayWithSelectedServices(mixed $productFromDB, mixed $sessionProduct)
+    /**
+     * Creating an array of products with only chosen services 
+     * 
+     * @param array $productFromDB
+     * @param array $sessionProduct
+     * 
+     * @return void|array
+     */
+    private function createArrayWithSelectedServices($productFromDB, $sessionProduct)
     {
         if ($productFromDB['id'] != $sessionProduct['itemId']) {
             return;
@@ -87,6 +106,13 @@ class ShopSessionsService
         return $productWithChosenServices;
     }
 
+    /**
+     * Delete product from Session
+     * 
+     * @param int $id
+     * 
+     * @return void
+     */
     public function deleteFromSession($id)
     {
         $session = session('products');

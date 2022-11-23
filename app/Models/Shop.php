@@ -11,6 +11,11 @@ class Shop extends Model
     public $timestamps = false;
     protected $guarded = ['id'];
 
+     /**
+     * Chosen services for product.
+     *
+     * @var array<string, string|int>
+     */
     private $chosenData = [
         'itemId' => '',
         'warranty' => '',
@@ -18,7 +23,14 @@ class Shop extends Model
         'setUp' => '',
     ];
 
-    public function setData(array $chosenItemAndServices): void
+    /**
+     * Set product and chosen services
+     * 
+     * @param array $chosenItemAndServices
+     * 
+     * @return void
+     */
+    public function setData($chosenItemAndServices)
     {
         foreach ($chosenItemAndServices as $key => $value) {
             if (array_key_exists($key, $this->chosenData)) {
@@ -27,7 +39,12 @@ class Shop extends Model
         }
     }
 
-    public function getData(): array
+    /**
+     * Get chosen product with services
+     * 
+     * @return array
+     */
+    public function getData()
     {
         return array_filter($this->chosenData);
     }

@@ -12,6 +12,11 @@ class Role extends Model
 
     public $timestamps = false;
 
+    /**
+     * Making roles belongs to many users
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function users()
     {
         return $this->belongsToMany(User::class, 'users_roles');
