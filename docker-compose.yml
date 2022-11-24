@@ -1,0 +1,22 @@
+version: '3.5'
+
+services:
+
+  php:
+    build: docker/php
+    ports:
+    - 80:80
+    volumes:
+    - ./:/var/www/html
+
+  mysql:
+    image: mysql:latest
+    ports:
+    - ${DB_PORT}:${DB_PORT}
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./databases/mysql:/var/lib/mysql
