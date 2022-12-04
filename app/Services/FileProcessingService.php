@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class FileProcessingService
@@ -14,10 +13,9 @@ class FileProcessingService
      *
      * @return string
      */
-    public function imageStoring(Request $request)
+    public function imageStoring($file)
     {
-        if ($request->hasFile('itemImage') && $request->file('itemImage')->isValid()) {
-            $file = $request->file('itemImage');
+        if (isset($file)) {
             $newImageName = $file->hashName();
             $firstSaveDir = strtolower(substr($newImageName, 0, 2));
             $secondSaveDir = strtolower(substr($newImageName, 2, 2));

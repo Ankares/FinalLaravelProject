@@ -5,7 +5,7 @@ namespace Tests\Feature;
 // use Illuminate\Foundation\Testing\RefreshDatabase;
 
 use App\Models\Role;
-use App\Models\Shop;
+use App\Models\ShopItem;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -18,7 +18,7 @@ class RolesAndUrlTest extends TestCase
      */
     public function test_admin_redirect_expections($status, $redirectTo): void
     {
-        Shop::factory(1)->create();
+        ShopItem::factory(1)->create();
         $admin = new Role();
         $admin->name = 'Administrative user';
         $admin->slug = 'administrative-user';
