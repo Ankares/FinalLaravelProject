@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ShopItemStoreRequest;
 use App\Repositories\ShopRepository;
+use App\Services\FeatureService;
 use App\Services\ShopItemProcessingService;
 use App\Services\ShopSessionsService;
 use Illuminate\Http\Request;
@@ -37,13 +38,17 @@ class ShopController extends Controller
     /**
      *  Show the shop page with products.
      *
+     * @param \Illuminate\Http\Request     $request
+     * @param \App\Services\FeatureService $featureService
+     *
      *  @return \Illuminate\View\View
      */
-    public function show(ShopRepository $repository)
+    public function show(Request $request, FeatureService $featureService)
     {
-        $products = $repository->getAllProducts(1, 100);
+        $data = $featureService->paginationAndSorting($request->except(['search', '_token']));
+        $filteredData = $featureService->filtration($request->only(['search']));
 
-        return view('shop/shopPage', ['products' => $products]);
+        return view('shop/shopPage', ['data' => $data, 'filteredData' => $filteredData]);
     }
 
     /**

@@ -15,7 +15,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [ShopController::class, 'show'])->name('home');
+Route::get('/?page={page}', [ShopController::class, 'show'])->name('page');
+Route::get('/', [ShopController::class, 'show'])->name('main');
+Route::post('/', [ShopController::class, 'show'])->name('filtering');
 
 Route::middleware('auth', 'verified')->group(function () {
     Route::middleware('role:simple-user')->group(function () {
