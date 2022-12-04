@@ -1,0 +1,30 @@
+image: php:8.1
+
+pipelines:
+  default:
+    - step:
+        script:
+          - apt-get update && apt-get install -y unzip libfreetype6-dev libjpeg62-turbo-dev libpng-dev zlib1g-dev
+          - docker-php-ext-configure gd --with-freetype --with-jpeg
+          - docker-php-ext-install -j$(nproc) pdo_mysql gd exif
+          - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+          - composer install
+          - ln -f -s .env.pipelines .env
+          - php artisan migrate
+          - sleep 5
+          - ./vendor/bin/php-cs-fixer fix --config .php-cs-fixer.php
+          - php artisan test --testsuit=Integrate
+          - php artisan test --testsuit=Unit
+          - php artisan test --testsuit=Feature
+        services:
+          - mysql
+
+definitions:
+  services:
+    mysql:
+      image: mysql:8.0
+      environment:
+        MYSQL_DATABASE: 'laravel'
+        MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+        MYSQL_USER: 'artem'
+        MYSQL_PASSWORD: 'artem1999'  

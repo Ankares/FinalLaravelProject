@@ -11,14 +11,29 @@ class ShopRepository implements ShopDataInterface
     /**
      * Get limited products from DB.
      *
-     * @param int $from
+     * @param string $order
      * @param int $limit
+     * @param int $itemsPerPage
      *
      * @return array
      */
-    public function getAllProducts($from, $limit)
+    public function getAllProducts($orderField, $order, $itemsPerPage)
     {
-        $shopItems = ShopItem::query()->where('id', '>=', $from)->limit($limit)->get();
+        $shopItems = ShopItem::query()->orderBy($orderField, $order)->simplePaginate($itemsPerPage);
+
+        return $shopItems;
+    }
+
+     /**
+     * Get all searched products
+     *
+     * @param string $name
+     * 
+     * @return array
+     */
+    public function getAllSearchedProducts($name)
+    {
+        $shopItems = ShopItem::query()->where('itemName', 'like', "%$name%")->get();
 
         return $shopItems;
     }

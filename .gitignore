@@ -16,5 +16,7 @@ yarn-error.log
 .fleet
 .idea
 .vscode
-.php-cs-fixer.*
-databas.editorconfig
+.php-cs-fixer.cache
+databases
+.editorconfig
+
