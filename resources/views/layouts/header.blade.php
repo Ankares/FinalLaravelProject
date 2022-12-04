@@ -22,25 +22,34 @@
               <li class="lead">
                 <a href="{{route('create')}}" class="nav-link px-2 text-white">Add product</a>
               </li>
+              <li class="lead">
+                <a href="{{route('showExports')}}" class="nav-link px-2 text-white">Exported files</a>
+              </li>
             @endrole
           @endauth
         </ul>
         <div class="text-end">
           @if (Route::has('login'))
             @auth
-            <div class="dropdown">
-              <button class="px-3 btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {{Auth::user()->name}}
-              </button>
-              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="{{ url('/dashboard') }}">Dashboard</a>
-                <form method="POST" action="{{ route('logout') }}">
-                  @csrf
-                  <button class="dropdown-item">Log out</button>
-                </form>
+            <div class="d-flex">
+              <div class="dropdown">
+                <button class="px-3 btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  {{Auth::user()->name}}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" href="{{ url('/dashboard') }}">Dashboard</a>
+                  @role('administrative-user')
+                    <div>
+                      <a href="{{route('export')}}" class="btn dropdown-item">Export prices</a>
+                    </div>
+                  @endrole
+                  <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button class="dropdown-item">Log out</button>
+                  </form>
+                </div>
               </div>
             </div>
-              
             @else
               <a href="{{ route('login') }}" type="button" class="btn btn-outline-light me-3">Log in</a>
             @if (Route::has('register'))

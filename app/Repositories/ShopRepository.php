@@ -39,6 +39,18 @@ class ShopRepository implements ShopDataInterface
     }
 
     /**
+     * Get products prices for exporting
+     *
+     * @return array
+     */
+    public function getProductsPrices()
+    {
+        $shopItem = ShopItem::query()->select('id', 'itemName', 'itemCost')->get()->toArray();
+
+        return $shopItem;
+    }
+
+    /**
      * Get one product from DB.
      *
      * @param int $id

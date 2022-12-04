@@ -6,10 +6,12 @@ services:
     build: docker/php
     ports:
     - 80:80
+    depends_on:
+    - db
     volumes:
     - ./:/var/www/html
 
-  mysql:
+  db:
     image: mysql:latest
     ports:
     - ${DB_PORT}:${DB_PORT}
@@ -20,3 +22,20 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD}
     volumes:
       - ./databases/mysql:/var/lib/mysql
+
+  localstack:
+    image: localstack/localstack
+    container_name: localstack-example
+    hostname: localhost
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=sqs,sns,ses,iam,s3,lambda
+      - DEBUG=1
+      - DATA_DIR=/tmp/localstack/data
+      - PORT_WEB_UI=${PORT_WEB_UI-}
+      - LAMBDA_EXECUTOR=${LAMBDA_EXECUTOR-}
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "${TMPDIR:-/tmp/localstack}:/var/lib/localstack"
+      - /var/run/docker.sock:/var/run/docker.sock

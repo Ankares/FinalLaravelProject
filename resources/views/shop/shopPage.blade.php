@@ -17,8 +17,11 @@
         <h2 class="mb-5 mt-5 ms-3 fs-1 text-center">Shop assortment</h2>
         <div class="row mx-auto">
             @if ($filteredData != null)
+                @if (empty($filteredData[0]))
+                    <p class="fs-4 text-center">There is no products found</p>
+                @endif
                 @foreach ($filteredData as $item)
-                    <div class="product card col-lg-3 offset-lg-1 col-md-5 offset-md-1 col-10 offset-1 mb-5 p-2 position-relative">
+                    <div class="product card shadow col-lg-3 offset-lg-1 col-md-5 offset-md-1 col-10 offset-1 mb-5 p-2 position-relative">
                         @role('administrative-user')
                             <div class="d-flex justify-content-between">
                                 <form action={{route('edit', [$item['id']])}} method="get">
@@ -43,7 +46,7 @@
                     </div>
                 @endforeach
             @else
-                <div class="dropdown text-md-end">
+                <div class="dropdown text-md-end ms-md-2">
                     <button class="btn btn-outline-secondary dropdown-toggle col-lg-3 offset-lg-1 col-md-5 offset-md-1 col-10 offset-1 mb-3" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Sort by
                     </button>
@@ -91,7 +94,7 @@
                     </div>
                 </div>
                 @foreach ($data['products'] as $item)
-                    <div class="product card col-lg-3 offset-lg-1 col-md-5 offset-md-1 col-10 offset-1 mb-5 p-2 position-relative">
+                    <div class="product card shadow col-lg-3 offset-lg-1 col-md-5 offset-md-1 col-10 offset-1 mb-5 p-2 position-relative">
                         @role('administrative-user')
                             <div class="d-flex justify-content-between">
                                 <form action={{route('edit', [$item['id']])}} method="get">
