@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ShopItemStoreRequest;
+use App\Jobs\UploadProductsToAmazonJob;
 use App\Repositories\ShopRepository;
+use App\Services\AwsService;
 use App\Services\FeatureService;
 use App\Services\ShopItemProcessingService;
 use App\Services\ShopSessionsService;
@@ -49,6 +51,36 @@ class ShopController extends Controller
         $filteredData = $featureService->filtration($request->only(['search']));
 
         return view('shop/shopPage', ['data' => $data, 'filteredData' => $filteredData]);
+    }
+
+    /**
+     *  Export products prices to Amazon web service.
+     *
+     *  @return \Illuminate\Http\RedirectResponse
+     */
+    public function exportPrices()
+    {
+        UploadProductsToAmazonJob::dispatch('my-bucket','my-file', __DIR__.'/../../../storage/files/prices.csv');
+        return redirect('/');
+    }
+
+    /**
+     *  Displaying all exported files in the bucket.
+     *
+     * @param \App\Services\AwsService $awsService
+     *
+     *  @return \Illuminate\View\View
+     */
+    public function showExports(AwsService $awsService)
+    {
+        $bucketData = $awsService->getBucketInfo('shop-bucket');
+        if ($bucketData != null) {
+            foreach ($bucketData->Contents as $content) {
+                $filesData[] = $awsService->getContentOfFiles('shop-bucket', $content->Key);
+            }
+        }
+
+        return view('files/export', ['bucketData' => $bucketData ?? null, 'filesData' => $filesData ?? null]);
     }
 
     /**

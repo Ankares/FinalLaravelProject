@@ -7,8 +7,8 @@ use Illuminate\Contracts\Session\Session;
 
 class FeatureService
 {
-    const PERPAGE = 9;
-    
+    public const PERPAGE = 9;
+
     public function __construct(
         private readonly ShopRepository $shopRepository,
         private readonly Session $filterSession,
@@ -58,7 +58,7 @@ class FeatureService
     {
         if (isset($input['search'])) {
             $searchedProducts = $this->shopRepository->getAllSearchedProducts($input['search']);
-           
+
             return $searchedProducts;
         }
 
