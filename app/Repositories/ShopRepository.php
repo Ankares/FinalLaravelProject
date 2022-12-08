@@ -14,6 +14,7 @@ class ShopRepository implements ShopDataInterface
      * @param string $order
      * @param int    $limit
      * @param int    $itemsPerPage
+
      *
      * @return array
      */

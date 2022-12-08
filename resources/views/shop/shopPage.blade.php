@@ -94,6 +94,7 @@
                     </div>
                 </div>
                 @foreach ($data['products'] as $item)
+
                     <div class="product card shadow col-lg-3 offset-lg-1 col-md-5 offset-md-1 col-10 offset-1 mb-5 p-2 position-relative">
                         @role('administrative-user')
                             <div class="d-flex justify-content-between">
