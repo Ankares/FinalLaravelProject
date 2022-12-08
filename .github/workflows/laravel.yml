@@ -46,4 +46,4 @@ jobs:
         php artisan test --testsuit=Unit
         php artisan test --testsuit=Feature
     - name: PHP FIXER
-      run: vendor/bin/php-cs-fixer fix --config .php-cs-fixer.php
+      run: vendor/bin/phpcs
