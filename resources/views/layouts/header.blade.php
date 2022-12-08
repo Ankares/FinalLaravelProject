@@ -9,9 +9,6 @@
         <p class="mt-4 lead">Best</p>
         <p class="text-success">items</p>
         <ul class="nav offset-0 col-12 col-lg-auto offset-lg-1 me-lg-auto mb-2 justify-content-center mb-md-0">
-          <li class="lead">
-            <a href="{{route('main')}}" class="nav-link px-2 text-white">Shop</a>
-          </li>
           @auth
             @role('simple-user')
               <li class="lead">

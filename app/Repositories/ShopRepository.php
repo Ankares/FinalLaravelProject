@@ -12,8 +12,8 @@ class ShopRepository implements ShopDataInterface
      * Get limited products from DB.
      *
      * @param string $order
-     * @param int $limit
-     * @param int $itemsPerPage
+     * @param int    $limit
+     * @param int    $itemsPerPage
      *
      * @return array
      */
@@ -24,11 +24,11 @@ class ShopRepository implements ShopDataInterface
         return $shopItems;
     }
 
-     /**
-     * Get all searched products
+    /**
+     * Get all searched products.
      *
      * @param string $name
-     * 
+     *
      * @return array
      */
     public function getAllSearchedProducts($name)
@@ -39,7 +39,7 @@ class ShopRepository implements ShopDataInterface
     }
 
     /**
-     * Get products prices for exporting
+     * Get products prices for exporting.
      *
      * @return array
      */

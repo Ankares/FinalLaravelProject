@@ -4,7 +4,6 @@ namespace App\Jobs;
 
 use App\Services\AwsService;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -23,8 +22,7 @@ class UploadProductsToAmazonJob implements ShouldQueue
         private $bucket,
         private $fileName,
         private $fileDir
-    )
-    {
+    ) {
         //
     }
 
@@ -37,7 +35,7 @@ class UploadProductsToAmazonJob implements ShouldQueue
     {
         $awsService->createCsvFileWithPrices($this->fileDir);
         $awsService->makeBucket($this->bucket);
-        $awsService->putFileInBucket($this->bucket, $this->fileName, fopen($this->fileDir, 'r'));
+        $awsService->putFileInBucket($this->bucket, $this->fileName, $this->fileDir);
         $awsService->sendEmail();  
     }
 }

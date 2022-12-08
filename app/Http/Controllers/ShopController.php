@@ -53,34 +53,34 @@ class ShopController extends Controller
         return view('shop/shopPage', ['data' => $data, 'filteredData' => $filteredData]);
     }
 
-     /**
-     *  Export products prices to Amazon web service
+    /**
+     *  Export products prices to Amazon web service.
      *
      *  @return \Illuminate\Http\RedirectResponse
      */
     public function exportPrices()
     {
-        UploadProductsToAmazonJob::dispatch('my-bucket','my-file', __DIR__.'/../../files/prices.csv');
-        
+        UploadProductsToAmazonJob::dispatch('my-bucket','my-file', __DIR__.'/../../../storage/files/prices.csv');
         return redirect('/');
     }
 
     /**
-     *  Displaying all exported files in the bucket
+     *  Displaying all exported files in the bucket.
      *
      * @param \App\Services\AwsService $awsService
-     * 
+     *
      *  @return \Illuminate\View\View
      */
     public function showExports(AwsService $awsService)
     {
-        $bucketData = $awsService->getBucketInfo('my-bucket');
+        $bucketData = $awsService->getBucketInfo('shop-bucket');
         if ($bucketData != null) {
             foreach ($bucketData->Contents as $content) {
-                $filesData[] = $awsService->getContentOfFiles('my-bucket', $content->Key);
+                $filesData[] = $awsService->getContentOfFiles('shop-bucket', $content->Key);
             }
         }
-        return view('files/export', ['bucketData'=>$bucketData ?? null, 'filesData' => $filesData ?? null]);
+
+        return view('files/export', ['bucketData' => $bucketData ?? null, 'filesData' => $filesData ?? null]);
     }
 
     /**

@@ -6,6 +6,7 @@ use App\Repositories\ShopRepository;
 use Aws\Exception\AwsException;
 use Aws\S3\S3Client;
 use Aws\Ses\SesClient;
+use Illuminate\Support\Facades\Log;
 
 class AwsService
 {
@@ -18,22 +19,22 @@ class AwsService
     {
         $this->s3 = new S3Client([
             'version' => 'latest',
-            'region' => $_ENV['AWS_DEFAULT_REGION'],
+            'region' => config('services.s3.region'),
             'use_path_style_endpoint' => true,
-            'endpoint' => $_ENV['AWS_ENDPOINT'],
+            'endpoint' => config('services.s3.endpoint'),
             'credentials' => array(
-                'key' => $_ENV['AWS_ACCESS_KEY_ID'],
-                'secret' => $_ENV['AWS_SECRET_ACCESS_KEY'],
+                'key' => config('services.s3.key'),
+                'secret' => config('services.s3.secret'),
             )]);
 
         $this->ses = new SesClient([
             'version' => 'latest',
-            'region' => $_ENV['AWS_DEFAULT_REGION'],
+            'region' => config('services.ses.region'),
             'use_path_style_endpoint' => true,
-            'endpoint' => $_ENV['AWS_ENDPOINT'],
+            'endpoint' => config('services.ses.endpoint'),
             'credentials' => array(
-                'key' => $_ENV['AWS_ACCESS_KEY_ID'],
-                'secret' => $_ENV['AWS_SECRET_ACCESS_KEY'],
+                'key' => config('services.ses.key'),
+                'secret' => config('services.ses.secret'),
             )]);
 
     }
@@ -68,12 +69,9 @@ class AwsService
             $result = $this->s3->createBucket([
                 'Bucket' => $bucketName,
             ]);
-
-            echo ("\n"."Bucket: $bucketName successfully created" . "\n");
+            Log::info("Bucket: $bucketName successfully created");
         } catch (AwsException $e) {
-            echo $e->getMessage();
-            echo("Bucket was not created. Error message: ".$e->getAwsErrorMessage()."\n");
-            echo "\n";
+            Log::error("Bucket was not created. Error message: ".$e->getAwsErrorMessage());
         }
     }
 
@@ -86,23 +84,23 @@ class AwsService
      * 
      * @return void
      */
-    public function putFileInBucket($bucketName, $keyFile, $body)
+    public function putFileInBucket($bucketName, $keyFile, $fileDir)
     {
         try{
             $params = [
                 'Bucket' => $bucketName,
                 'Key' => $keyFile,
-                'Body' => $body,
+                'Body' => fopen($fileDir, 'r'),
             ];
             $result = $this->s3->putObject($params);
             $command = $this->s3->getCommand('PutObject', $params);
             $result = $this->s3->execute($command);
 
-            echo ("File: $keyFile successfully exported into bucket: $bucketName" . "\n");
+            file_put_contents($fileDir, '');
+            
+            Log::info("File: $keyFile successfully exported into bucket: $bucketName");
         } catch (AwsException $e) {
-            echo $e->getMessage();
-            echo("File was not exported. Error message: ".$e->getAwsErrorMessage()."\n");
-            echo "\n";
+            Log::error("File was not exported. Error message: ".$e->getAwsErrorMessage());
         }
     }
    
@@ -117,7 +115,7 @@ class AwsService
     public function getContentOfFiles($bucketName, $keyFile)
     {
         $fileData = '';
-        $data = fopen($_ENV['AWS_ENDPOINT'].'/'.$bucketName.'/'.$keyFile, 'r');
+        $data = fopen(config('services.s3.endpoint').'/'.$bucketName.'/'.$keyFile, 'r');
         while (!feof($data)) {
             $fileData .= fgets($data);
         }
@@ -138,7 +136,7 @@ class AwsService
      */
     public function getBucketInfo($bucketName)
     {
-        $bucket = @simplexml_load_file($_ENV['AWS_ENDPOINT'].'/'.$bucketName);
+        $bucket = @simplexml_load_file(config('services.s3.endpoint').'/'.$bucketName);
         if ($bucket != null) {
             return $bucket;
         }
@@ -180,11 +178,9 @@ class AwsService
                 ],
             ]);
             $messageId = $result['MessageId'];
-            echo ("Email sent! Message ID : $messageId" . "\n");
+            Log::info("Email sent! Message ID : $messageId");
         } catch (AwsException $e) {
-            echo $e->getMessage();
-            echo("The email was not sent. Error message: ".$e->getAwsErrorMessage()."\n");
-            echo "\n";
+            Log::error("The email was not sent. Error message: ".$e->getAwsErrorMessage());
         }
     }
 }
