@@ -19,4 +19,5 @@ yarn-error.log
 .php-cs-fixer.cache
 databases
 .editorconfig
+client_secret.json
 

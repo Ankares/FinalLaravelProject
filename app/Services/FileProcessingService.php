@@ -19,10 +19,10 @@ class FileProcessingService
             $newImageName = $file->hashName();
             $firstSaveDir = strtolower(substr($newImageName, 0, 2));
             $secondSaveDir = strtolower(substr($newImageName, 2, 2));
-            $fileSaveDir = $firstSaveDir.'/'.$secondSaveDir;
-            $file->storeAs('shopItems/'.$fileSaveDir, $newImageName);
+            $fileSaveDir = $firstSaveDir . '/' . $secondSaveDir;
+            $file->storeAs('shopItems/' . $fileSaveDir, $newImageName);
 
-            return $fileSaveDir.'/'.$newImageName;
+            return $fileSaveDir . '/' . $newImageName;
         } else {
             return 'noimage.jpg';
         }
@@ -38,7 +38,7 @@ class FileProcessingService
     public function deleteFromDir($filePath)
     {
         if ($filePath != '') {
-            Storage::delete('shopItems/'.$filePath);
+            Storage::delete('shopItems/' . $filePath);
         }
     }
 
@@ -55,8 +55,8 @@ class FileProcessingService
         $firstDir = $path[0];
         $secondDir = $path[1];
         if (isset($firstDir) && isset($secondDir)) {
-            @rmdir('shopItems/'.$firstDir.'/'.$secondDir);
-            @rmdir('shopItems/'.$firstDir);
+            @rmdir('shopItems/' . $firstDir . '/' . $secondDir);
+            @rmdir('shopItems/' . $firstDir);
         }
     }
 }

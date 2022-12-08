@@ -55,9 +55,9 @@ class RolesAndUrlTest extends TestCase
             [200, '/add-product'],
             [200, '/edit-product/1'],
             [405, '/delete-product/1'],
-            [404, '/shopping-cart'],
+            [403, '/shopping-cart'],
             [405, '/shopping-cart/delete/1'],
-            [404, '/product-services/1'],
+            [403, '/product-services/1'],
         ];
     }
 
@@ -65,8 +65,8 @@ class RolesAndUrlTest extends TestCase
     {
         return $redirection = [
             [200, '/'],
-            [404, '/add-product'],
-            [404, '/edit-product/1'],
+            [403, '/add-product'],
+            [403, '/edit-product/1'],
             [405, '/delete-product/1'],
             [200, '/shopping-cart'],
             [405, '/shopping-cart/delete/1'],

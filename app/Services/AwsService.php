@@ -15,8 +15,7 @@ class AwsService
 
     public function __construct(
         private readonly ShopRepository $repository
-    )
-    {
+    ) {
         $this->s3 = new S3Client([
             'version' => 'latest',
             'region' => config('services.s3.region'),
@@ -36,14 +35,13 @@ class AwsService
                 'key' => config('services.ses.key'),
                 'secret' => config('services.ses.secret'),
             )]);
-
     }
 
     /**
      * Creating csv file with products prices from DB
-     * 
+     *
      * @param string $savePath
-     * 
+     *
      * @return void
      */
     public function createCsvFileWithPrices($savePath)
@@ -55,12 +53,12 @@ class AwsService
         }
         fclose($fp);
     }
-    
+
     /**
      * Making bucket in AWS
-     * 
+     *
      * @param string $bucketName
-     * 
+     *
      * @return void
      */
     public function makeBucket($bucketName)
@@ -71,22 +69,22 @@ class AwsService
             ]);
             Log::info("Bucket: $bucketName successfully created");
         } catch (AwsException $e) {
-            Log::error("Bucket was not created. Error message: ".$e->getAwsErrorMessage());
+            Log::error("Bucket was not created. Error message: " . $e->getAwsErrorMessage());
         }
     }
 
     /**
      * Put csv file to the bucket
-     * 
+     *
      * @param string $bucketName
      * @param string $keyFile
      * @param string $body
-     * 
+     *
      * @return void
      */
     public function putFileInBucket($bucketName, $keyFile, $fileDir)
     {
-        try{
+        try {
             $params = [
                 'Bucket' => $bucketName,
                 'Key' => $keyFile,
@@ -97,30 +95,30 @@ class AwsService
             $result = $this->s3->execute($command);
 
             file_put_contents($fileDir, '');
-            
+
             Log::info("File: $keyFile successfully exported into bucket: $bucketName");
         } catch (AwsException $e) {
-            Log::error("File was not exported. Error message: ".$e->getAwsErrorMessage());
+            Log::error("File was not exported. Error message: " . $e->getAwsErrorMessage());
         }
     }
-   
+
     /**
      * Parse all files in the bucket
-     * 
+     *
      * @param string $bucketName
      * @param string $keyFile
-     * 
+     *
      * @return array
      */
     public function getContentOfFiles($bucketName, $keyFile)
     {
         $fileData = '';
-        $data = fopen(config('services.s3.endpoint').'/'.$bucketName.'/'.$keyFile, 'r');
+        $data = fopen(config('services.s3.endpoint') . '/' . $bucketName . '/' . $keyFile, 'r');
         while (!feof($data)) {
             $fileData .= fgets($data);
         }
         fclose($data);
-        
+
         return [
             'fileName' => $keyFile,
             'fileContent' => $fileData,
@@ -129,24 +127,24 @@ class AwsService
 
      /**
      * Get info about Bucket
-     * 
+     *
      * @param string $bucketName
-     * 
+     *
      * @return \SimpleXMLElement|null
      */
     public function getBucketInfo($bucketName)
     {
-        $bucket = @simplexml_load_file(config('services.s3.endpoint').'/'.$bucketName);
+        $bucket = @simplexml_load_file(config('services.s3.endpoint') . '/' . $bucketName);
         if ($bucket != null) {
             return $bucket;
         }
-        
+
         return null;
     }
 
      /**
      * Sending email message about export status
-     * 
+     *
      * @return void
      */
     public function sendEmail()
@@ -156,7 +154,7 @@ class AwsService
         $subject = 'File upload';
         $body = 'You have successfully uploaded file';
         $charset = 'UTF-8';
-        
+
         try {
             $result = $this->ses->sendEmail([
                 'Destination' => [
@@ -180,7 +178,7 @@ class AwsService
             $messageId = $result['MessageId'];
             Log::info("Email sent! Message ID : $messageId");
         } catch (AwsException $e) {
-            Log::error("The email was not sent. Error message: ".$e->getAwsErrorMessage());
+            Log::error("The email was not sent. Error message: " . $e->getAwsErrorMessage());
         }
     }
 }

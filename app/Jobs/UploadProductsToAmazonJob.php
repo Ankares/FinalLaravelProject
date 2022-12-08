@@ -11,7 +11,10 @@ use Illuminate\Queue\SerializesModels;
 
 class UploadProductsToAmazonJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * Create a new job instance.
@@ -36,6 +39,6 @@ class UploadProductsToAmazonJob implements ShouldQueue
         $awsService->createCsvFileWithPrices($this->fileDir);
         $awsService->makeBucket($this->bucket);
         $awsService->putFileInBucket($this->bucket, $this->fileName, $this->fileDir);
-        $awsService->sendEmail();  
+        $awsService->sendEmail();
     }
 }

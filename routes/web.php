@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,6 +19,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/?page={page}', [ShopController::class, 'show'])->name('page');
 Route::get('/', [ShopController::class, 'show'])->name('main');
 Route::post('/', [ShopController::class, 'show'])->name('filtering');
+
+Route::get('/google-auth/redirect', [UserController::class, 'googleAuth'])->name('authGoogle');
+Route::get('/google-auth/callback', [UserController::class, 'googleAuthCallback']);
 
 Route::middleware('auth', 'verified')->group(function () {
     Route::middleware('role:simple-user')->group(function () {
@@ -46,4 +50,4 @@ Route::middleware('auth', 'verified')->group(function () {
 //     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 // });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

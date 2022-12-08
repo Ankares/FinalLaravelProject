@@ -31,7 +31,7 @@ class ShopControllerTest extends TestCase
         $user->roles()->attach($userRole);
 
         $response = $this->actingAs($user)->withSession(['banned' => false])->get('/add-product');
-        $response->assertStatus(404);
+        $response->assertStatus(403);
         $response = $this->actingAs($admin)->withSession(['banned' => false])->get('/add-product');
         $response->assertStatus(200);
 
@@ -89,7 +89,7 @@ class ShopControllerTest extends TestCase
         $user->roles()->attach($userRole);
 
         $response = $this->actingAs($user)->withSession(['banned' => false])->get('/add-product');
-        $response->assertStatus(404);
+        $response->assertStatus(403);
         $response = $this->actingAs($admin)->withSession(['banned' => false])->get('/add-product');
         $response->assertStatus(200);
 
@@ -130,12 +130,12 @@ class ShopControllerTest extends TestCase
         $user->roles()->attach($userRole);
 
         $response = $this->actingAs($admin)->withSession(['banned' => false])->get('/product-services/8');
-        $response->assertStatus(404);
+        $response->assertStatus(403);
         $response = $this->actingAs($user)->withSession(['banned' => false])->get('/product-services/8');
         $response->assertStatus(200);
 
         $response = $this->actingAs($admin)->withSession(['banned' => false])->get('/shopping-cart');
-        $response->assertStatus(404);
+        $response->assertStatus(403);
         $response = $this->actingAs($user)->withSession(['banned' => false])->get('/shopping-cart');
         $response->assertStatus(200);
     }
@@ -163,7 +163,7 @@ class ShopControllerTest extends TestCase
             'itemId' => '8',
             'itemName' => 'NewName',
         ]);
-        $response->assertStatus(404);
+        $response->assertStatus(403);
         $response = $this->actingAs($user)->withSession(['banned' => false])->post('/shopping-cart', [
             'itemId' => '8',
             'itemName' => 'NewName',
@@ -171,7 +171,7 @@ class ShopControllerTest extends TestCase
         $response->assertStatus(200);
 
         $response = $this->actingAs($admin)->withSession(['banned' => false])->post('/shopping-cart/delete/8');
-        $response->assertStatus(404);
+        $response->assertStatus(403);
         $response = $this->actingAs($user)->withSession(['banned' => false])->post('/shopping-cart/delete/8');
         $response->assertStatus(302);
         $response->assertRedirect('/shopping-cart');
@@ -197,7 +197,7 @@ class ShopControllerTest extends TestCase
         $user->roles()->attach($userRole);
 
         $response = $this->actingAs($user)->withSession(['banned' => false])->post('/delete-product/8');
-        $response->assertStatus(404);
+        $response->assertStatus(403);
         $response = $this->actingAs($admin)->withSession(['banned' => false])->post('/delete-product/8');
         $response->assertStatus(302);
         $response->assertRedirect('/');
