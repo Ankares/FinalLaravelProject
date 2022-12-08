@@ -2,37 +2,28 @@
 
 namespace App\Services;
 
+use App\Http\Requests\ShopItemStoreRequest;
 use App\Repositories\ShopRepository;
-use Illuminate\Http\Request;
 
 class ShopItemProcessingService
 {
+    public const DEFAULTIMAGE = 'noimage.jpg';
+
     public function __construct(
-        private FileProcessingService $fileService,
-        private ShopRepository $repository
+        private readonly FileProcessingService $fileService,
+        private readonly ShopRepository $repository
     ) {
     }
 
     /**
      * Validate product's input fields.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param \App\Http\Requests\ShopItemStoreRequest $request
      *
      * @return void
      */
-    private function validation(Request $request)
+    private function serviceValidation(ShopItemStoreRequest $request)
     {
-        $request->validate([
-            'itemName' => 'required|min:5|max:100',
-            'manufacturer' => 'required|string|max:100',
-            'price' => 'required|integer',
-            'year' => 'required|integer|min:2000|max:2022',
-            'itemImage' => 'nullable|image|mimes:jpg,png,jpeg|max:2048|dimensions:min_width=300,min_height=300,max_width=2000,max_height=2000',
-            'warrantyCost' => 'nullable|integer|max:2000',
-            'deliveryCost' => 'nullable|integer|max:2000',
-            'setUpCost' => 'nullable|integer|max:2000',
-        ]);
-
         if ($request->warrantyPeriod === 'no') {
             $request->warrantyPeriod = null;
             $request->warrantyCost = null;
@@ -46,15 +37,15 @@ class ShopItemProcessingService
     /**
      * Storing one product to DB.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param \App\Http\Requests\ShopItemStoreRequest $request
      *
      * @return void
      */
-    public function storeProduct(Request $request)
+    public function storeProduct(ShopItemStoreRequest $request)
     {
-        $this->validation($request);
+        $this->serviceValidation($request);
 
-        $path = $this->fileService->imageStoring($request);
+        $path = $this->fileService->imageStoring($request->file('itemImage'));
 
         $this->repository->addOneProduct($request, $path);
     }
@@ -62,28 +53,28 @@ class ShopItemProcessingService
     /**
      * Updating one product and image in directory and database.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param \App\Http\Requests\ShopItemStoreRequest $request
      *
      * @return void
      */
-    public function updateProduct(Request $request)
+    public function updateProduct(ShopItemStoreRequest $request)
     {
-        $this->validation($request);
+        $this->serviceValidation($request);
         $productFromDB = $this->repository->getOneProductById($request->id);
 
-        if ($request->itemImage && $productFromDB[0]['itemImage'] != 'noimage.jpg') {
-            $this->deleteImageFromDir($productFromDB[0]['itemImage']);
-            $path = $this->fileService->imageStoring($request);
+        if ($request->itemImage && $productFromDB['itemImage'] != self::DEFAULTIMAGE) {
+            $this->deleteImageFromDir($productFromDB['itemImage']);
+            $path = $this->fileService->imageStoring($request->file('itemImage'));
         }
-        if ($request->itemImage && $productFromDB[0]['itemImage'] == 'noimage.jpg') {
-            $path = $this->fileService->imageStoring($request);
+        if ($request->itemImage && $productFromDB['itemImage'] == self::DEFAULTIMAGE) {
+            $path = $this->fileService->imageStoring($request->file('itemImage'));
         }
         if (!$request->itemImage) {
-            $path = $productFromDB[0]['itemImage'];
+            $path = $productFromDB['itemImage'];
         }
-        if (isset($request->dropImage) && !$request->itemImage && $productFromDB[0]['itemImage'] != 'noimage.jpg') {
-            $this->deleteImageFromDir($productFromDB[0]['itemImage']);
-            $path = 'noimage.jpg';
+        if (isset($request->dropImage) && !$request->itemImage && $productFromDB['itemImage'] != self::DEFAULTIMAGE) {
+            $this->deleteImageFromDir($productFromDB['itemImage']);
+            $path = self::DEFAULTIMAGE;
         }
 
         $this->repository->updateOneProduct($request, $path);
@@ -92,7 +83,7 @@ class ShopItemProcessingService
     /**
      * Delete one product and image from database and directory.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param $id
      *
      * @return void
      */
@@ -100,8 +91,8 @@ class ShopItemProcessingService
     {
         $productFromDB = $this->repository->getOneProductById($id);
 
-        if ($productFromDB[0]['itemImage'] != 'noimage.jpg') {
-            $this->deleteImageFromDir($productFromDB[0]['itemImage']);
+        if ($productFromDB['itemImage'] != self::DEFAULTIMAGE) {
+            $this->deleteImageFromDir($productFromDB['itemImage']);
         }
 
         $this->repository->deleteOneProduct($id);

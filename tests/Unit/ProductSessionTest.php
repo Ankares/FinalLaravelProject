@@ -4,7 +4,8 @@ namespace Tests\Unit;
 
 use App\Repositories\ShopRepository;
 use App\Services\ShopSessionsService;
-use App\Models\Shop;
+use App\Models\ShopItem;
+use Illuminate\Contracts\Session\Session;
 use Tests\TestCase;
 
 use function PHPUnit\Framework\assertEmpty;
@@ -16,7 +17,7 @@ class ProductSessionTest extends TestCase
     public function test_session_service_methods()
     {
         $repositoryMock = $this->mock(ShopRepository::class);
-        $repositoryMock->expects()->getOneProductById(1)->andReturn([[
+        $repositoryMock->expects()->getOneProductById(1)->andReturn([
             'id' => '1',
             'itemName' => 'TestItem',
             'manufacturer' => 'TestManufacturer',
@@ -28,26 +29,35 @@ class ProductSessionTest extends TestCase
             'deliveryPeriod' => '10 days',
             'deliveryCost' => '1000',
             'itemSetupCost' => '1000',
-        ]]);
+        ]);
 
-        $modelMock = $this->mock(Shop::class);
+        $modelMock = $this->mock(ShopItem::class);
         $modelMock->expects()->setData()->with(['itemId' => '1', 'warranty' => 'on']);
         $modelMock->expects()->getData()->andReturn(['itemId' => '1', 'warranty' => 'on']);
-        $productService = new ShopSessionsService($modelMock, $repositoryMock);
+
+        $sessionMock = $this->mock(Session::class);
+        $sessionMock->expects()->has()->with('products');
+        $sessionMock->expects()->has()->with('products')->andReturn('true');
+        $sessionMock->expects()->push()->with('products', ['itemId' => '1', 'warranty' => 'on']);
+        $sessionMock->expects()->get()->with('products')->andReturn([['itemId' => '1', 'warranty' => 'on']])->twice();
+        $sessionMock->expects()->forget()->with('products');
+
+        $productService = new ShopSessionsService($modelMock, $repositoryMock, $sessionMock);
 
         $productService->addProductToSession(['itemId' => '1', 'warranty' => 'on']);
-        assertNotEmpty(session('products'));
+        assertNotEmpty($sessionMock);
 
         $returnArray = $productService->getProductsFromSession();
-        $expectedArray = [
-            ['id' => '1',
-                'itemName' => 'TestItem',
-                'itemImage' => 'noimage.jpg',
-                'year' => '2020',
-                'totalPrice' => '3000',
-                'warrantyPeriod' => '10 days',
-                'warrantyCost' => '1000', ],
-        ];
+
+        $expectedArray = [[
+            'id' => '1',
+            'itemName' => 'TestItem',
+            'itemImage' => 'noimage.jpg',
+            'year' => '2020',
+            'totalPrice' => '3000',
+            'warrantyPeriod' => '10 days',
+            'warrantyCost' => '1000',
+        ]];
         assertEquals($expectedArray, $returnArray);
 
         $productService->deleteFromSession(1);

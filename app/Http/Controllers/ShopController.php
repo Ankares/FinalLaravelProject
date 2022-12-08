@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ShopItemStoreRequest;
 use App\Repositories\ShopRepository;
 use App\Services\ShopItemProcessingService;
 use App\Services\ShopSessionsService;
@@ -9,13 +10,6 @@ use Illuminate\Http\Request;
 
 class ShopController extends Controller
 {
-    public function __construct(
-        private ShopRepository $repository,
-        private ShopSessionsService $sessionService,
-        private ShopItemProcessingService $itemService
-    ) {
-    }
-
     /**
      *  Show the create product page.
      *
@@ -33,9 +27,9 @@ class ShopController extends Controller
      *
      *  @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function store(ShopItemProcessingService $productService, ShopItemStoreRequest $request)
     {
-        $this->itemService->storeProduct($request);
+        $productService->storeProduct($request);
 
         return redirect('/');
     }
@@ -45,11 +39,11 @@ class ShopController extends Controller
      *
      *  @return \Illuminate\View\View
      */
-    public function show()
+    public function show(ShopRepository $repository)
     {
-        $collections = $this->repository->getAllProducts(1, 100);
+        $products = $repository->getAllProducts(1, 100);
 
-        return view('shop/shopPage', ['collections' => $collections]);
+        return view('shop/shopPage', ['products' => $products]);
     }
 
     /**
@@ -59,11 +53,11 @@ class ShopController extends Controller
      *
      *  @return \Illuminate\View\View
      */
-    public function edit(Request $request)
+    public function edit(ShopRepository $repository, Request $request)
     {
-        $collection = $this->repository->getOneProductById($request->id);
+        $product = $repository->getOneProductById($request->id);
 
-        return view('shop/editPage', ['item' => $collection[0]]);
+        return view('shop/editPage', ['item' => $product]);
     }
 
     /**
@@ -73,9 +67,9 @@ class ShopController extends Controller
      *
      *  @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request)
+    public function update(ShopItemProcessingService $productService, ShopItemStoreRequest $request)
     {
-        $this->itemService->updateProduct($request);
+        $productService->updateProduct($request);
 
         return redirect('/');
     }
@@ -87,9 +81,9 @@ class ShopController extends Controller
      *
      *  @return \Illuminate\Http\RedirectResponse
      */
-    public function delete(Request $request)
+    public function delete(ShopItemProcessingService $productService, Request $request)
     {
-        $this->itemService->deleteProduct($request->id);
+        $productService->deleteProduct($request->id);
 
         return redirect('/');
     }
@@ -101,11 +95,11 @@ class ShopController extends Controller
      *
      *  @return \Illuminate\View\View
      */
-    public function additionalServices(Request $request)
+    public function additionalServices(ShopRepository $repository, Request $request)
     {
-        $collection = $this->repository->getOneProductById($request->id);
+        $product = $repository->getOneProductById($request->id);
 
-        return view('shop/productServices', ['item' => $collection[0]]);
+        return view('shop/productServices', ['item' => $product]);
     }
 
     /**
@@ -115,12 +109,12 @@ class ShopController extends Controller
      *
      *  @return \Illuminate\View\View
      */
-    public function cart(Request $request)
+    public function cart(ShopSessionsService $sessionService, Request $request)
     {
         if ($request->input()) {
-            $this->sessionService->addProductToSession($request->input());
+            $sessionService->addProductToSession($request->input());
         }
-        $products = $this->sessionService->getProductsFromSession();
+        $products = $sessionService->getProductsFromSession();
 
         return view('shop/cart', ['products' => $products]);
     }
@@ -132,9 +126,9 @@ class ShopController extends Controller
      *
      *  @return \Illuminate\Http\RedirectResponse
      */
-    public function deleteFromCart(Request $request)
+    public function deleteFromCart(ShopSessionsService $sessionService, Request $request)
     {
-        $this->sessionService->deleteFromSession($request->id);
+        $sessionService->deleteFromSession($request->id);
 
         return redirect('/shopping-cart');
     }

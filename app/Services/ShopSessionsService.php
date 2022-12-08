@@ -2,14 +2,16 @@
 
 namespace App\Services;
 
-use App\Models\Shop;
+use App\Models\ShopItem;
 use App\Repositories\ShopRepository;
+use Illuminate\Contracts\Session\Session;
 
 class ShopSessionsService
 {
     public function __construct(
-        private Shop $shopModel,
-        private ShopRepository $shopRepository
+        private readonly ShopItem $shopModel,
+        private readonly ShopRepository $shopRepository,
+        private readonly Session $session
     ) {
     }
 
@@ -27,13 +29,13 @@ class ShopSessionsService
         $this->shopModel->setData($chosenProductAndServices);
         $chosenData = $this->shopModel->getData();
 
-        if (!session()->has('products')) {
-            session()->push('products', $chosenData);
+        if (!$this->session->has('products')) {
+            $this->session->push('products', $chosenData);
 
             return;
         }
 
-        foreach (session('products') as $oneProduct) {
+        foreach ($this->session->get('products') as $oneProduct) {
             if ($oneProduct && $oneProduct['itemId'] == $chosenProductAndServices['itemId']) {
                 $productExists = true;
 
@@ -42,7 +44,7 @@ class ShopSessionsService
         }
 
         if (false === $productExists) {
-            session()->push('products', $chosenData);
+            $this->session->push('products', $chosenData);
         }
     }
 
@@ -55,18 +57,18 @@ class ShopSessionsService
     {
         $productsWithChosenServices = [];
 
-        if (!session()->has('products')) {
+        if (!$this->session->has('products')) {
             return;
         }
 
-        foreach (session('products') as $sessionProduct) {
+        foreach ($this->session->get('products') as $sessionProduct) {
             if (!$sessionProduct) {
                 return;
             }
 
             $productIdInSession = $sessionProduct['itemId'];
             $productFromDB = $this->shopRepository->getOneProductById($productIdInSession);
-            $productsWithChosenServices[] = $this->createArrayWithSelectedServices($productFromDB[0], $sessionProduct);
+            $productsWithChosenServices[] = $this->createArrayWithSelectedServices($productFromDB, $sessionProduct);
         }
 
         return $productsWithChosenServices;
@@ -115,12 +117,12 @@ class ShopSessionsService
      */
     public function deleteFromSession($id)
     {
-        $session = session('products');
-        session()->forget('products');
+        $session = $this->session->get('products');
+        $this->session->forget('products');
 
         foreach ($session as $sessionProduct) {
             if ($sessionProduct['itemId'] != $id) {
-                session()->push('products', $sessionProduct);
+                $this->session->push('products', $sessionProduct);
             }
         }
     }
