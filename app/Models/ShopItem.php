@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 class ShopItem extends Model
 {
     use HasFactory;
+
     public $timestamps = false;
     protected $guarded = ['id'];
 

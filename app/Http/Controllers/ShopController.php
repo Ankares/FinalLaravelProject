@@ -60,8 +60,9 @@ class ShopController extends Controller
      */
     public function exportPrices()
     {
-        UploadProductsToAmazonJob::dispatch('my-bucket','my-file', __DIR__.'/../../../storage/files/prices.csv');
-        return redirect('/');
+        UploadProductsToAmazonJob::dispatch('shop-bucket', 'prices', __DIR__ . '/../../../storage/files/prices.csv');
+
+        return redirect('/show-exports')->with('success', 'You have successfully exported prices');
     }
 
     /**

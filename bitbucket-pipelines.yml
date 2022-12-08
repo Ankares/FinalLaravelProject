@@ -12,7 +12,7 @@ pipelines:
           - ln -f -s .env.example.pipelines .env
           - php artisan migrate
           - sleep 5
-          - ./vendor/bin/php-cs-fixer fix --config .php-cs-fixer.php
+          - ./vendor/bin/phpcs
           - php artisan test --testsuit=Integrate
           - php artisan test --testsuit=Unit
           - php artisan test --testsuit=Feature
