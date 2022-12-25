@@ -16,7 +16,7 @@ jobs:
           image: redis
           ports:
             - 6379:6379
-          options: --entrypoint redis-server
+          options: --entrypoint redis-server --requirepass password
           
     steps:
     - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
