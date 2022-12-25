@@ -8,7 +8,7 @@ pipelines:
           - apt-get install -y nodejs && apt-get install -y npm
           - npm install
           - docker-php-ext-configure gd --with-freetype --with-jpeg
-          - docker-php-ext-install -j$(nproc) pdo_mysql gd exif
+          - docker-php-ext-install -j$(nproc) pdo_mysql gd exif sockets
           - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
           - composer install
           - ln -f -s .env.example.pipelines .env

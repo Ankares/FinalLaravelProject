@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Repositories\ShopRepository;
 use Aws\Exception\AwsException;
 use Aws\S3\S3Client;
 use Aws\Ses\SesClient;
@@ -10,48 +9,10 @@ use Illuminate\Support\Facades\Log;
 
 class AwsService
 {
-    private $s3 = null;
-    private $ses = null;
-
     public function __construct(
-        private readonly ShopRepository $repository
+        private readonly S3Client $s3,
+        private readonly SesClient $ses,
     ) {
-        $this->s3 = new S3Client([
-            'version' => 'latest',
-            'region' => config('services.s3.region'),
-            'use_path_style_endpoint' => true,
-            'endpoint' => config('services.s3.endpoint'),
-            'credentials' => array(
-                'key' => config('services.s3.key'),
-                'secret' => config('services.s3.secret'),
-            )]);
-
-        $this->ses = new SesClient([
-            'version' => 'latest',
-            'region' => config('services.ses.region'),
-            'use_path_style_endpoint' => true,
-            'endpoint' => config('services.ses.endpoint'),
-            'credentials' => array(
-                'key' => config('services.ses.key'),
-                'secret' => config('services.ses.secret'),
-            )]);
-    }
-
-    /**
-     * Creating csv file with products prices from DB
-     *
-     * @param string $savePath
-     *
-     * @return void
-     */
-    public function createCsvFileWithPrices($savePath)
-    {
-        $products = $this->repository->getProductsPrices();
-        $fp = fopen($savePath, 'w');
-        foreach ($products as $product) {
-            fputcsv($fp, $product);
-        }
-        fclose($fp);
     }
 
     /**
@@ -82,19 +43,17 @@ class AwsService
      *
      * @return void
      */
-    public function putFileInBucket($bucketName, $keyFile, $fileDir)
+    public function putFileInBucket($bucketName, $keyFile, $body)
     {
         try {
             $params = [
                 'Bucket' => $bucketName,
                 'Key' => $keyFile,
-                'Body' => fopen($fileDir, 'r'),
+                'Body' => $body,
             ];
             $result = $this->s3->putObject($params);
             $command = $this->s3->getCommand('PutObject', $params);
             $result = $this->s3->execute($command);
-
-            file_put_contents($fileDir, '');
 
             Log::info("File: $keyFile successfully exported into bucket: $bucketName");
         } catch (AwsException $e) {
@@ -110,7 +69,7 @@ class AwsService
      *
      * @return array
      */
-    public function getContentOfFiles($bucketName, $keyFile)
+    private function getContentOfFiles($bucketName, $keyFile)
     {
         $fileData = '';
         $data = fopen(config('services.s3.endpoint') . '/' . $bucketName . '/' . $keyFile, 'r');
@@ -132,7 +91,7 @@ class AwsService
      *
      * @return \SimpleXMLElement|null
      */
-    public function getBucketInfo($bucketName)
+    private function getBucketInfo($bucketName)
     {
         $bucket = @simplexml_load_file(config('services.s3.endpoint') . '/' . $bucketName);
         if ($bucket != null) {
@@ -152,7 +111,7 @@ class AwsService
         $senderEmail = 'artem@mail.com';
         $recipientEmail = 'example@mail.com';
         $subject = 'File upload';
-        $body = 'You have successfully uploaded file';
+        $body = 'You have successfully uploaded file to AWS';
         $charset = 'UTF-8';
 
         try {
@@ -180,5 +139,27 @@ class AwsService
         } catch (AwsException $e) {
             Log::error("The email was not sent. Error message: " . $e->getAwsErrorMessage());
         }
+    }
+
+    /**
+     * Displaying all the bucket's data
+     *
+     * @param string $bucketName
+     *
+     * @return array
+     */
+    public function displayingAWSContent($bucketName)
+    {
+        $bucketData = $this->getBucketInfo($bucketName);
+        if ($bucketData != null) {
+            foreach ($bucketData->Contents as $content) {
+                $filesData[] = $this->getContentOfFiles($bucketName, $content->Key);
+            }
+        }
+
+        return [
+            'filesData' => $filesData ?? null,
+            'bucketData' => $bucketData ?? null,
+        ];
     }
 }

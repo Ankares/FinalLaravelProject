@@ -6,6 +6,11 @@
 @section('content')
     <div class="container mt-5 mx-auto relative min-h-screen">
         <div class="search-from mb-3 col-md-11 col-10 offset-1">
+            @if (session('success'))
+                <div class="alert alert-success col-6 mx-auto mt-5 mb-5 text-center">
+                    {!! session('success') !!}
+                </div> 
+            @endif
             <form action="{{route('filtering')}}" method="post">
                 @csrf
                 <div class="d-flex justify-content-between ">
@@ -49,6 +54,52 @@
                     </div>
                 @endforeach
             @else
+                <div id="carouselExampleIndicators" class="carousel slide mb-5 bg-white col-12 shadow-sm" data-ride="carousel">
+                    <h2 class="mb-3 ms-3 fs-1 text-center">Top items</h2>
+                    <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <h4 class="fw-bold text-dark text-center">Acer Aspire 3 A315-34</h4>
+                        <div class="text-warning text-center mb-3">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star-half-stroke"></i>
+                        </div>
+                        <img class="d-block w-50 mx-auto mb-3" src="shopItems/no/ac/Ноутбук Acer Aspire 3 A315-34-P7TD.jpg" alt="First slide">
+                    </div>
+                    <div class="carousel-item">
+                        <h4 class="fw-bold text-dark text-center">Phillips 43PFS5505</h4>
+                        <div class="text-warning text-center mb-3">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <img class="d-block w-50 mx-auto mb-3" src="shopItems/te/ph/Телевизор Philips 43PFS5505.jpeg" alt="Second slide">
+                    </div>
+                    <div class="carousel-item">
+                        <h4 class="fw-bold text-dark text-center">LG 32LM576BPLD</h4>
+                        <div class="text-warning text-center mb-3">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star-half-stroke"></i>
+                        </div>
+                        <img class="d-block w-50 mx-auto mb-2" src="shopItems/te/lg/Телевизор LG 32LM576BPLD.jpeg" alt="Third slide">
+                    </div>
+                    </div>
+                    <a class="carousel-control-prev bg-dark" style="width:7%" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next bg-dark" style="width:7%" href="#carouselExampleIndicators" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                    </a>
+                </div>
                 <div class="dropdown text-md-end ms-md-2">
                     <button class="btn btn-outline-secondary dropdown-toggle col-lg-3 offset-lg-1 col-md-5 offset-md-1 col-10 offset-1 mb-3" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Sort by

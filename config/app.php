@@ -196,6 +196,8 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\RolesServiceProvider::class,
         App\Providers\CurrencyServiceProvider::class,
+        App\Providers\AwsServiceProvider::class,
+        App\Providers\AMQPServiceProvider::class,
     ],
 
     /*
