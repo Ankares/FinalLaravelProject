@@ -37,7 +37,12 @@
                   <a class="dropdown-item" href="{{ url('/dashboard') }}">Dashboard</a>
                   @role('administrative-user')
                     <div>
-                      <a href="{{route('export')}}" class="btn dropdown-item">Export prices</a>
+                      <form method="POST" action="{{route('sendPrices')}}">
+                        @csrf
+                        <input type="hidden" name="filePath" value="{!! storage_path('files/prices.csv') !!}">
+                        <input type="hidden" name="queueName" value="filePath">
+                        <button class="btn dropdown-item">Export prices</button>
+                      </form>
                     </div>
                   @endrole
                   <form method="POST" action="{{ route('logout') }}">

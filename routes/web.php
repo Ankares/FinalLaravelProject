@@ -35,7 +35,7 @@ Route::middleware('auth', 'verified')->group(function () {
         Route::get('/edit-product/{id}', [ShopController::class, 'edit'])->name('edit');
         Route::post('/edit-product/{id}', [ShopController::class, 'update'])->name('update');
         Route::post('/delete-product/{id}', [ShopController::class, 'delete'])->name('delete');
-        Route::get('/export', [ShopController::class, 'exportPrices'])->name('export');
+        Route::post('/send-prices', [ShopController::class, 'sendPricesToRabbit'])->name('sendPrices');
         Route::get('/show-exports', [ShopController::class, 'showExports'])->name('showExports');
     });
 

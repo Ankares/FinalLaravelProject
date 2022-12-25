@@ -7,8 +7,10 @@ use App\Interfaces\CurrencyServiceInterface;
 use App\Jobs\UploadProductsToAmazonJob;
 use App\Repositories\ShopRepository;
 use App\Services\AwsService;
+use App\Services\CreateCsvFiles;
 use App\Services\ExchangeCurrencyService;
 use App\Services\FeatureService;
+use App\Services\RabbitMQService;
 use App\Services\ShopItemProcessingService;
 use App\Services\ShopSessionsService;
 use Illuminate\Http\Request;
@@ -58,19 +60,23 @@ class ShopController extends Controller
     }
 
     /**
-     *  Export products prices to Amazon web service.
+     *  Sending messages to RabbitMQ.
+     *
+     *  @param \App\Services\RabbitMQService $rabbitService
+     *  @param \App\Services\CreateCsvFiles $createCsv
+     *  @param \Illuminate\Http\Request $request
      *
      *  @return \Illuminate\Http\RedirectResponse
      */
-    public function exportPrices()
+    public function sendPricesToRabbit(RabbitMQService $rabbitService, CreateCsvFiles $createCsv, Request $request)
     {
-        UploadProductsToAmazonJob::dispatch('shop-bucket', 'prices', __DIR__ . '/../../../storage/files/prices.csv');
-
-        return redirect('/show-exports')->with('success', 'You have successfully exported prices');
+        $createCsv->createCsvFileWithPrices($request->filePath);
+        $rabbitService->sendMessageToRabbitMQ($request->filePath, $request->queueName);
+        return redirect('/')->with('success', 'You have successfully exported prices');
     }
 
     /**
-     *  Displaying all exported files in the bucket.
+     *  Displaying all exported files in the AWS bucket.
      *
      * @param \App\Services\AwsService $awsService
      *
@@ -78,14 +84,8 @@ class ShopController extends Controller
      */
     public function showExports(AwsService $awsService)
     {
-        $bucketData = $awsService->getBucketInfo('shop-bucket');
-        if ($bucketData != null) {
-            foreach ($bucketData->Contents as $content) {
-                $filesData[] = $awsService->getContentOfFiles('shop-bucket', $content->Key);
-            }
-        }
-
-        return view('files/export', ['bucketData' => $bucketData ?? null, 'filesData' => $filesData ?? null]);
+        $data = $awsService->displayingAWSContent('shop-bucket');
+        return view('files/export', ['bucketData' => $data['bucketData'] ?? null, 'filesData' => $data['filesData'] ?? null]);
     }
 
     /**

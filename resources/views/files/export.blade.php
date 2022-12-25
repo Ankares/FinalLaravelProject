@@ -5,11 +5,6 @@
 @extends('layouts/header')
 @section('content')
     <div class="container text-center col-10 mx-auto">
-        @if (session('success'))
-            <div class="alert alert-success col-6 mx-auto mt-5">
-                {!! session('success') !!}
-            </div> 
-        @endif
         @if (!empty($bucketData))
             <div class="fs-2 mt-5 mb-3">
                <p>Bucket: {!! $bucketData->Name !!}</p>
