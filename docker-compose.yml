@@ -39,3 +39,20 @@ services:
     volumes:
       - "${TMPDIR:-/tmp/localstack}:/var/lib/localstack"
       - /var/run/docker.sock:/var/run/docker.sock
+
+  redis:
+    container_name: redis
+    image: redis:latest
+    restart: always
+    entrypoint: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD} --maxmemory 512mb --maxmemory-policy allkeys-lru
+    networks:
+      - default
+    ports:
+      - "6379:6379"
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+
+networks:
+  default:
+    driver: bridge
