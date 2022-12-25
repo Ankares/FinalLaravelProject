@@ -16,6 +16,7 @@ jobs:
           image: redis
           ports:
             - 6379:6379
+          options: --entrypoint redis-server
           
     steps:
     - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
@@ -49,7 +50,6 @@ jobs:
         DB_DATABASE: database/database.sqlite
         REDIS_HOST: localhost
         REDIS_PORT: 6379
-        REDIS_PASSWORD: password
       run: |
         php artisan test --testsuit=Integrate
         php artisan test --testsuit=Unit
