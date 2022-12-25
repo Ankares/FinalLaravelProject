@@ -49,6 +49,7 @@ jobs:
         DB_DATABASE: database/database.sqlite
         REDIS_HOST: localhost
         REDIS_PORT: 6379
+        REDIS_PASSWORD: password
       run: |
         php artisan test --testsuit=Integrate
         php artisan test --testsuit=Unit
