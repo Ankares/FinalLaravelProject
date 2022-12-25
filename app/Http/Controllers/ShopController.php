@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ShopItemStoreRequest;
+use App\Interfaces\CurrencyServiceInterface;
 use App\Jobs\UploadProductsToAmazonJob;
 use App\Repositories\ShopRepository;
 use App\Services\AwsService;
+use App\Services\ExchangeCurrencyService;
 use App\Services\FeatureService;
 use App\Services\ShopItemProcessingService;
 use App\Services\ShopSessionsService;
@@ -45,12 +47,14 @@ class ShopController extends Controller
      *
      *  @return \Illuminate\View\View
      */
-    public function show(Request $request, FeatureService $featureService)
+    public function show(Request $request, FeatureService $featureService, CurrencyServiceInterface $currencyInterface)
     {
         $data = $featureService->paginationAndSorting($request->except(['search', '_token']));
         $filteredData = $featureService->filtration($request->only(['search']));
 
-        return view('shop/shopPage', ['data' => $data, 'filteredData' => $filteredData]);
+        $currencies = $currencyInterface->getCurrencies();
+
+        return view('shop/shopPage', ['data' => $data, 'filteredData' => $filteredData, 'currencies' => $currencies]);
     }
 
     /**
@@ -147,14 +151,16 @@ class ShopController extends Controller
      *
      *  @return \Illuminate\View\View
      */
-    public function cart(ShopSessionsService $sessionService, Request $request)
+    public function cart(ShopSessionsService $sessionService, Request $request, CurrencyServiceInterface $currencyInterface)
     {
         if ($request->input()) {
             $sessionService->addProductToSession($request->input());
         }
         $products = $sessionService->getProductsFromSession();
 
-        return view('shop/cart', ['products' => $products]);
+        $currencies = $currencyInterface->getCurrencies();
+
+        return view('shop/cart', ['products' => $products, 'currencies' => $currencies]);
     }
 
     /**

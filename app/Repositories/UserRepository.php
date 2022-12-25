@@ -24,9 +24,9 @@ class UserRepository implements UserDataInterface
 
     public function selectUsersRole($user)
     {
-        $userExists = DB::table('users_roles')->where('user_id', $user->id)->first();
+        $roleOfTheUser = DB::table('users_roles')->where('user_id', $user->id)->first();
 
-        return $userExists;
+        return $roleOfTheUser;
     }
 
     public function addRoleToUser($user)

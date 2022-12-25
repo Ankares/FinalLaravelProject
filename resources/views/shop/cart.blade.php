@@ -34,17 +34,17 @@
                             <p class="mt-2 fw-bold">Set up:</p>  
                             <p class="mt-2">Cost: {!! $product['setupCost'] !!} BYN</p>  
                         @endif
-
                         <p class="mt-4">
                             @if (isset($product['totalPrice']))
-                                <p class="mt-2 fs-4">
-                                    Total Price: {!! $product['totalPrice'] !!} BYN
+                                <p class="mt-2 fs-4" data-toggle="tooltip" data-placement="top" title="@foreach($currencies as $currency)@if ($currency['iso'] == 'USD' || $currency['iso'] == 'EUR' || $currency['iso'] == 'RUB') {!! number_format( $product['totalPrice'] / $currency['value']) !!} {!! $currency['iso'] !!} @endif @endforeach">
+                                    Total price: {!! number_format($product['totalPrice']) !!} BYN
                                 </p>  
                             @endif
                         </p>
                     </div> 
                     <hr>
-                @endforeach        
+                @endforeach
+                <a href="/" class="btn btn-outline-success col-4 fs-5 mt-3">Buy all</a>        
             </div>  
         @else
             <p class="mt-5 mb-4 text-center fs-5">There is no items in your cart</p>

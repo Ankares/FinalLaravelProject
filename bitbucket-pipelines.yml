@@ -5,22 +5,26 @@ pipelines:
     - step:
         script:
           - apt-get update && apt-get install -y unzip libfreetype6-dev libjpeg62-turbo-dev libpng-dev zlib1g-dev
+          - apt-get install -y nodejs && apt-get install -y npm
+          - npm install
           - docker-php-ext-configure gd --with-freetype --with-jpeg
           - docker-php-ext-install -j$(nproc) pdo_mysql gd exif
           - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
           - composer install
           - ln -f -s .env.example.pipelines .env
           - php artisan migrate
-          - sleep 5
-          - ./vendor/bin/phpcs
           - php artisan test --testsuit=Integrate
           - php artisan test --testsuit=Unit
           - php artisan test --testsuit=Feature
+          - ./vendor/bin/phpcs
         services:
+          - redis
           - mysql
 
 definitions:
   services:
+    redis:
+      image: redis
     mysql:
       image: mysql:8.0
       environment:

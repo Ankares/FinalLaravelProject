@@ -38,7 +38,10 @@
                         <div class="card-body text-start lead">
                             <h5 class="card-title mb-3">{!! $item['itemName'] !!}</h5>
                             <p class="card-text mb-2">Manufacturer: {!! $item['manufacturer'] !!}</p>
-                            <p class="card-text mb-5">Year: {!! $item['created_year'] !!}</p>
+                            <p class="card-text mb-2">Year: {!! $item['created_year'] !!}</p>
+                            <p class="card-text mb-5" data-toggle="tooltip" data-placement="top" title="@foreach($currencies as $currency)@if ($currency['iso'] == 'USD' || $currency['iso'] == 'EUR' || $currency['iso'] == 'RUB') {!! number_format( $item['itemCost'] / $currency['value']) !!} {!! $currency['iso'] !!} @endif @endforeach">
+                                Price: {!! number_format($item['itemCost']) !!} BYN
+                            </p>  
                             @role('simple-user')
                                 <a href="{{route('services', [$item['id']])}}" class="lead btn btn-outline-primary col-12 position-absolute bottom-0 start-0 rounded-0 rounded-bottom">Add for: {!! $item['itemCost'] !!} BYN</a>
                             @endrole
@@ -111,9 +114,12 @@
                         <div class="card-body text-start lead">
                             <h5 class="card-title mb-3">{!! $item['itemName'] !!}</h5>
                             <p class="card-text mb-2">Manufacturer: {!! $item['manufacturer'] !!}</p>
-                            <p class="card-text mb-5">Year: {!! $item['created_year'] !!}</p>
+                            <p class="card-text mb-2">Year: {!! $item['created_year'] !!}</p>
+                            <p class="card-text mb-5" data-toggle="tooltip" data-placement="top" title="@foreach($currencies as $currency)@if ($currency['iso'] == 'USD' || $currency['iso'] == 'EUR' || $currency['iso'] == 'RUB') {!! number_format( $item['itemCost'] / $currency['value']) !!} {!! $currency['iso'] !!} @endif @endforeach">
+                                Price: {!! number_format($item['itemCost']) !!} BYN
+                            </p>  
                             @role('simple-user')
-                                <a href="{{route('services', [$item['id']])}}" class="lead btn btn-outline-primary col-12 position-absolute bottom-0 start-0 rounded-0 rounded-bottom">Add for: {!! $item['itemCost'] !!} BYN</a>
+                                <a href="{{route('services', [$item['id']])}}" class="lead btn btn-outline-primary col-12 position-absolute bottom-0 start-0 rounded-0 rounded-bottom">Additional Services</a>
                             @endrole
                         </div>
                     </div>
