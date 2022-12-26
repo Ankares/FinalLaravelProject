@@ -27,24 +27,68 @@ class FeatureService
         if (!empty($filter) && !isset($filter['page'])) {
             $this->filterSession->put('filter', $filter);
         }
-        if (isset($filter['reset'])) {
+        if (isset($filter['reset']) || isset($filter['refresh'])) {
             $this->filterSession->forget('filter');
         }
         if (empty($filter) || !$this->filterSession->has('filter')) {
             $sortedProducts = $this->shopRepository->getAllProducts('id', 'asc', self::PERPAGE);
 
-            return [
-                'products' => $sortedProducts,
-            ];
+            return $sortedProducts;
+        }
+        if (isset($filter['category']) || $this->filterSession->has('category')) {
+            return;
         }
 
         $filter = $this->filterSession->get('filter');
         list($orderField, $order) = explode('-', key($filter));
         $sortedProducts = $this->shopRepository->getAllProducts($orderField, $order, self::PERPAGE);
 
-        return [
-            'products' => $sortedProducts,
-        ];
+        return $sortedProducts;
+    }
+
+    /**
+     * Choosing product's category + applying filter to this category
+     *
+     * @param array $category
+     *
+     * @return array
+     */
+    public function chooseCategory($category)
+    {
+        $orderField = 'itemName';
+        $order = 'asc';
+
+        if (!empty($category['filter'])) {
+            $this->filterSession->put('filter', $category['filter']);
+        }
+        if (!empty($category['category'])) {
+            $this->filterSession->put('category', $category['category']);
+        }
+        if ($this->filterSession->has('category')) {
+            $category = $this->filterSession->get('category');
+        }
+        if ($this->filterSession->has('filter') && $this->filterSession->has('category')) {
+            $filter = $this->filterSession->get('filter');
+            list($orderField, $order) = explode('-', key($filter));
+        }
+
+        $products = $this->shopRepository->getProductsByCategory($category, $orderField, $order, self::PERPAGE);
+        return $products;
+    }
+
+     /**
+     * Forget category to display all products
+     *
+     * @param mixed $refresh
+     *
+     * @return void
+     */
+    public function forgetCategory($refresh)
+    {
+        if (!empty($refresh) && $this->filterSession->has('category')) {
+            $this->filterSession->forget('category');
+            return;
+        }
     }
 
     /**

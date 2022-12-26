@@ -51,7 +51,6 @@ class RolesAndUrlTest extends TestCase
     public function adminRedirections(): array
     {
         return $redirection = [
-            [200, '/'],
             [200, '/add-product'],
             [200, '/edit-product/1'],
             [405, '/delete-product/1'],
@@ -64,7 +63,6 @@ class RolesAndUrlTest extends TestCase
     public function userRedirections(): array
     {
         return $redirection = [
-            [200, '/'],
             [403, '/add-product'],
             [403, '/edit-product/1'],
             [405, '/delete-product/1'],

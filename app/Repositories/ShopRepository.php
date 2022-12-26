@@ -51,6 +51,23 @@ class ShopRepository implements ShopDataInterface
         return $shopItem;
     }
 
+     /**
+     * Get products by category
+     *
+     * @param string $category
+     * @param string $orderField
+     * @param string $order
+     * @param int $itemsPerPage
+     *
+     * @return array
+     */
+    public function getProductsByCategory($category, $orderField, $order, $itemsPerPage)
+    {
+        $shopItems = ShopItem::query()->where('category', $category)->orderBy($orderField, $order)->simplePaginate($itemsPerPage);
+
+        return $shopItems;
+    }
+
     /**
      * Get one product from DB.
      *

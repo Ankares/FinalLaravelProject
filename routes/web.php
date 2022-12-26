@@ -17,8 +17,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/?page={page}', [ShopController::class, 'show'])->name('page');
-Route::get('/', [ShopController::class, 'show'])->name('main');
+Route::any('/', [ShopController::class, 'show'])->name('main');
 Route::post('/', [ShopController::class, 'show'])->name('filtering');
+Route::any('/categories/{category}', [ShopController::class, 'show'])->name('categories');
 
 Route::get('/google-auth/redirect', [UserController::class, 'googleAuth'])->name('authGoogle');
 Route::get('/google-auth/callback', [UserController::class, 'googleAuthCallback']);

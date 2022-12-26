@@ -16,7 +16,7 @@ jobs:
           image: redis
           ports:
             - 6379:6379
-          options: --entrypoint redis-server --requirepass password
+          entrypoint: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD} --maxmemory 512mb --maxmemory-policy allkeys-lru
           
     steps:
     - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
