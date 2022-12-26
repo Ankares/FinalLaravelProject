@@ -13,6 +13,7 @@ use App\Services\FeatureService;
 use App\Services\RabbitMQService;
 use App\Services\ShopItemProcessingService;
 use App\Services\ShopSessionsService;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 
 class ShopController extends Controller
@@ -46,17 +47,24 @@ class ShopController extends Controller
      *
      * @param \Illuminate\Http\Request     $request
      * @param \App\Services\FeatureService $featureService
+     * @param \App\Interfaces\CurrencyServiceInterface $currencyInterface
+     * @param \Illuminate\Contracts\Session\Session $session
      *
      *  @return \Illuminate\View\View
      */
-    public function show(Request $request, FeatureService $featureService, CurrencyServiceInterface $currencyInterface)
+    public function show(Request $request, FeatureService $featureService, CurrencyServiceInterface $currencyInterface, Session $session)
     {
-        $data = $featureService->paginationAndSorting($request->except(['search', '_token']));
+        if (isset($request->refresh)) {
+            $featureService->forgetCategory($request->refresh);
+        }
+        $products = $featureService->paginationAndSorting($request->except(['search', '_token', 'category', 'itemsPerPage']));
         $filteredData = $featureService->filtration($request->only(['search']));
-
+        if (isset($request->category) || $session->has('category')) {
+            $products = $featureService->chooseCategory($request);
+        }
         $currencies = $currencyInterface->getCurrencies();
 
-        return view('shop/shopPage', ['data' => $data, 'filteredData' => $filteredData, 'currencies' => $currencies]);
+        return view('shop/shopPage', ['products' => $products, 'filteredData' => $filteredData, 'currencies' => $currencies]);
     }
 
     /**

@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->integer('itemCost');
             $table->string('itemImage');
             $table->integer('created_year');
+            $table->string('category')->default('noCategory');
             $table->string('warrantyPeriod')->nullable();
             $table->integer('warrantyCost')->nullable();
             $table->string('deliveryPeriod')->nullable();
